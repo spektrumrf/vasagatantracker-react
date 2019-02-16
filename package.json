@@ -1,0 +1,56 @@
+{
+  "name": "vasagatantracker",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@date-io/moment": "^1.1.0",
+    "@material-ui/core": "^3.9.2",
+    "@material-ui/icons": "^3.0.2",
+    "axios": "^0.17.1",
+    "canvasjs": "^1.8.1",
+    "chart.js": "^2.7.3",
+    "crypto": "^1.0.1",
+    "firebase": "^5.8.2",
+    "image-compressor.js": "^1.1.4",
+    "lodash": "^4.17.11",
+    "material-ui-pickers": "^2.2.1",
+    "moment": "^2.24.0",
+    "mui-datatables": "^2.0.0-beta-54",
+    "pondjs": "^0.8.10",
+    "re-resizable": "^4.11.0",
+    "react": "^16.8.1",
+    "react-countdown-now": "^2.1.0",
+    "react-countdown-to-future-date": "0.0.3",
+    "react-dom": "^16.8.1",
+    "react-file-base64": "^1.0.3",
+    "react-image-file": "^0.3.0",
+    "react-image-upload": "0.0.1",
+    "react-redux": "^5.1.1",
+    "react-resizable": "^1.7.5",
+    "react-resizable-box": "^2.1.0",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "^2.1.5",
+    "react-timeseries-charts": "^0.15.5",
+    "recharts": "^1.4.3",
+    "redux": "^3.7.2",
+    "semantic-ui-react": "^0.78.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "server": "json-server -p3001 db.json"
+  },
+  "proxy": "http://localhost:3001",
+  "devDependencies": {
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.9.1"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
