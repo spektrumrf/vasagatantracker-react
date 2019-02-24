@@ -60,7 +60,7 @@ class UserFormDialog extends React.Component {
         return (
             <div>
                 <ExpansionPanel>
-                    <ExpansionPanelSummary style={{ background: '#ff77a9' }} expandIcon={<ExpandMore/>}>
+                    <ExpansionPanelSummary style={{ background: 'grey' }} expandIcon={<ExpandMore/>}>
                         <Typography variant="h6">Nytt lag</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{ display: 'flex', flexDirection: 'column', padding: '40px', alignItems: 'center' }} >
@@ -125,7 +125,7 @@ class UserFormDialog extends React.Component {
                     </ExpansionPanelDetails>
                     <Loading active={this.state.loadingActive} loading={this.state.loading} message={this.state.message}/>
                     <ExpansionPanelActions style={{ paddingRight: '20px', paddingBottom: '20px' }}>
-                        <Button variant="contained" onClick={this.addUser} color="secondary">Skapa</Button>
+                        <Button variant="contained" onClick={this.addUser} color="primary">Skapa</Button>
                     </ExpansionPanelActions>
                 </ExpansionPanel>
             </div>

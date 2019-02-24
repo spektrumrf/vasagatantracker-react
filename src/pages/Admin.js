@@ -9,6 +9,8 @@ import { DateTimePicker } from 'material-ui-pickers';
 import MomentUtils from '@date-io/moment';
 import moment from 'moment';
 import Grid from "../../node_modules/@material-ui/core/Grid/Grid";
+import _ from "lodash";
+import Loading from "../components/Loading";
 
 class Admin extends React.Component {
     constructor(props) {
@@ -18,7 +20,10 @@ class Admin extends React.Component {
             realtimeCutoffTime: this.props.store.getState().realtimeCutoffTime,
             startDate: this.props.store.getState().startDate,
             newRealtimeCutoffTime: this.props.store.getState().realtimeCutoffTime,
-            newStartDate: this.props.store.getState().startDate
+            newStartDate: this.props.store.getState().startDate,
+            loading: false,
+            loadingActive: false,
+            message: ''
         };
     }
 
@@ -34,25 +39,36 @@ class Admin extends React.Component {
     }
 
     updateStartDate = async () => {
-        if (window.confirm('Är du säker att du vill ändra starttiden?')) {
-            this.setState({startDateLoading: true});
-            await propertiesService.update({startDate: this.state.newStartDate}, this.state.chosenYear);
-            this.setState({startDate: this.state.newStartDate});
-            this.props.store.dispatch({
-                type: 'UPDATE_START_DATE',
-                startDate: this.state.newStartDate
-            });
+        try {
+            if (window.confirm('Är du säker att du vill ändra starttiden?')) {
+                this.setState({ loading: true, loadingActive: true });
+                await propertiesService.update({startDate: this.state.newStartDate}, this.state.chosenYear);
+                this.setState({startDate: this.state.newStartDate, open: false, loading: false, loadingActive: false});
+                this.props.store.dispatch({
+                    type: 'UPDATE_START_DATE',
+                    startDate: this.state.newStartDate
+                });
+            }
+        } catch (exception) {
+            const error = _.get(exception, 'request.data.error');
+            this.setState({ loading: false, loadingActive: true, message: error ? error : 'Något katastrofalt har inträffat... Får du säkert göra detta?!' });
         }
     };
 
     updateRealtimeCutoffTime = async () => {
-        if (window.confirm('Är du säker att du vill ändra realtime cutoff tiden?')) {
-            await propertiesService.update({realtimeCutoffTime: this.state.newRealtimeCutoffTime}, this.state.chosenYear);
-            this.setState({realtimeCutoffTime: this.state.newRealtimeCutoffTime});
-            this.props.store.dispatch({
-                type: 'UPDATE_CUTOFF_TIME',
-                realtimeCutoffTime: this.state.newRealtimeCutoffTime
-            });
+        try {
+            if (window.confirm('Är du säker att du vill ändra realtime cutoff tiden?')) {
+                this.setState({ loading: true, loadingActive: true });
+                await propertiesService.update({realtimeCutoffTime: this.state.newRealtimeCutoffTime}, this.state.chosenYear);
+                this.setState({realtimeCutoffTime: this.state.newRealtimeCutoffTime, open: false, loading: false, loadingActive: false});
+                this.props.store.dispatch({
+                    type: 'UPDATE_CUTOFF_TIME',
+                    realtimeCutoffTime: this.state.newRealtimeCutoffTime
+                });
+            }
+        } catch (exception) {
+            const error = _.get(exception, 'request.data.error');
+            this.setState({ loading: false, loadingActive: true, message: error ? error : 'Något katastrofalt har inträffat... Får du säkert göra detta?!' });
         }
     };
 
@@ -86,7 +102,7 @@ class Admin extends React.Component {
                                     label="Ny starttid"
                                 />
                             </form>
-                            <Button style={{ marginTop: '10px' }} color="secondary" variant="contained" onClick={this.updateStartDate}>Uppdatera starttid</Button>
+                            <Button style={{ marginTop: '10px' }} color="primary" variant="contained" onClick={this.updateStartDate}>Uppdatera starttid</Button>
                         </Grid>
                         <Grid item>
                             <div>
@@ -102,9 +118,10 @@ class Admin extends React.Component {
                                     label="Ny realtime cutoff"
                                 />
                             </form>
-                            <Button style={{ marginTop: '10px' }} color="secondary" variant="contained" onClick={this.updateRealtimeCutoffTime}>Uppdatera realtime cutoff</Button>
+                            <Button style={{ marginTop: '10px' }} color="primary" variant="contained" onClick={this.updateRealtimeCutoffTime}>Uppdatera realtime cutoff</Button>
                         </Grid>
                     </Grid>
+                    <Loading active={this.state.loadingActive} loading={this.state.loading} message={this.state.message}/>
                 </div>
             </MuiPickersUtilsProvider>
         );

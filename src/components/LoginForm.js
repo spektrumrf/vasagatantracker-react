@@ -62,7 +62,7 @@ class LoginForm extends React.Component {
     };
     render() {
         return (
-            <div style={{ width: 'auto', marginLeft: '0px', marginRight: '0px' }}>
+            <div style={{ width: 'auto', marginLeft: 'auto', marginRight: 'auto', maxWidth: '500px' }}>
                 <Paper style={{ display: 'flex', flexDirection: 'column', padding: '40px', alignItems: 'center' }}>
                     <Typography variant="h5">Logga in</Typography>
                     <form style={{ width: '100%' }}>

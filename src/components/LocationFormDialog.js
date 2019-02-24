@@ -30,7 +30,7 @@ class LocationFormDialog extends React.Component {
             await locationService.create(location, this.props.store.getState().chosenYear);
         } catch (exception) {
             const error = _.get(exception, 'request.data.error');
-            console.log(error ? error : 'Något katastrofalt har inträffat... Ladda om sidan!' );
+            console.log(error ? error : 'Något katastrofalt har inträffat... Försök igen om en stund!' );
         }
     };
 
@@ -38,7 +38,7 @@ class LocationFormDialog extends React.Component {
         return (
             <div>
                 <ExpansionPanel>
-                    <ExpansionPanelSummary style={{ background: '#ff77a9' }} expandIcon={<ExpandMore/>}>
+                    <ExpansionPanelSummary style={{ background: 'grey' }} expandIcon={<ExpandMore/>}>
                         <Typography variant="h6">Ny plats</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{ display: 'flex', flexDirection: 'column', padding: '40px', alignItems: 'center' }} >
@@ -57,7 +57,7 @@ class LocationFormDialog extends React.Component {
                         </form>
                     </ExpansionPanelDetails>
                     <ExpansionPanelActions style={{ paddingRight: '20px', paddingBottom: '20px' }}>
-                        <Button variant="contained" onClick={this.addLocation} color="secondary">Skapa</Button>
+                        <Button variant="contained" onClick={this.addLocation} color="primary">Skapa</Button>
                     </ExpansionPanelActions>
                 </ExpansionPanel>
             </div>

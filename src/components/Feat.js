@@ -139,7 +139,7 @@ class Feat extends React.Component {
                                         </ListItem>
                                         <ListItem>
                                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginLeft: '10px', marginTop: '-10px' }}>
-                                                {_.map(feat.content, (value, drink) => <Typography variant="body1">{`${drink} ${value}`}</Typography>)}
+                                                {_.map(feat.content, (value, drink) => <Typography key={drink} variant="body1">{`${drink} ${value}`}</Typography>)}
                                             </div>
                                         </ListItem>
                                         <Divider />

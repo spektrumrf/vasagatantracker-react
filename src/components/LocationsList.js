@@ -92,7 +92,7 @@ class LocationsList extends React.Component{
             textLabels: localisation
         };
         return (
-            <div>
+            <div style={{ maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto' }}>
                 <MUIDataTable
                     title={'Platser'}
                     data={locationData}

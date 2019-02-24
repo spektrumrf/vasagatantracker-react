@@ -35,7 +35,7 @@ class FeatsList extends React.Component {
             }
         } catch(exception){
             const error = _.get(exception, 'request.data.error');
-            console.log(error ? error : 'Något katastrofalt har inträffat... Ladda om sidan!' );
+            console.log(error ? error : 'Något katastrofalt har inträffat... Försök igen om en stund!!' );
         }
     };
 
@@ -111,7 +111,7 @@ class FeatsList extends React.Component {
         };
         const title = this.props.filter === 'all' ? 'Senaste prestationer' : (_.get(user, 'type') === 'admin' ? 'Alla prestationer' : 'Egna prestationer');
         return (
-            <div>
+            <div style={{ maxWidth: '700px', marginLeft: 'auto', marginRight: 'auto' }}>
                 <MUIDataTable
                     title={title}
                     data={featData}

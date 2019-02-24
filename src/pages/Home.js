@@ -12,16 +12,25 @@ const Home = props => {
     const user = state.user;
     const startDate = state.startDate;
     const info = state.info;
+    const countdownRenderer = ({ hours, minutes, seconds, completed }) => {
+        if (completed) {
+            return <Typography variant="h4">
+                {state.activeYear === state.chosenYear ? 'Approbatur i Vasagatan har börjat, lycka till!' : 'Approbatur i Vasagatan är avslutad, buhuu!'}
+            </Typography>;
+        } else {
+            return <Typography variant="h4">{hours} timmar {minutes} minuter {seconds} sekunder</Typography>;
+        }
+    };
     return (
         <div>
             {user && _.get(user, 'type') !== 'admin' &&
                     <FeatFormDialog store={props.store} snack={props.snack}/>}
-            <div>
+            <div style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '500px'}}>
                 <Paper style={{ display: 'flex', flexDirection: 'column', padding: '40px', alignItems: 'center', textAlign: 'center' }}>
                     <Typography style={{ paddingBottom: '20px' }} variant="h4">Tid till Approbatur i Vasagatan</Typography>
                     {startDate ?
                         <div style={{ paddingBottom: '20px' }}>
-                            <Typography variant="h4"><Countdown date={startDate*1000}></Countdown></Typography>
+                            <Countdown date={startDate*1000} renderer={countdownRenderer}/>
                         </div> :
                         <div style={{ paddingBottom: '20px' }}>
                             <CircularProgress/>
