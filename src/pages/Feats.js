@@ -7,7 +7,7 @@ const Feats = props => {
     const user = props.store.getState().user;
     return (
         <div>
-            {_.get(user, 'type') !== 'admin' &&
+            {user && _.get(user, 'type') !== 'admin' &&
                 <FeatFormDialog store={props.store} snack={props.snack}/>}
             <FeatsList store={props.store} filter='team' snack={props.snack}/>
         </div>

@@ -7,7 +7,7 @@ const Locations = props => {
     const user = props.store.getState().user;
     return (
         <div>
-            {_.get(user, 'type') !== 'admin' &&
+            { user && _.get(user, 'type') !== 'admin' &&
                     <FeatFormDialog store={props.store} snack={props.snack}/>}
             <LocationsList store={props.store} snack={props.snack}/>
         </div>

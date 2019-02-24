@@ -14,7 +14,7 @@ const Home = props => {
     const info = state.info;
     return (
         <div>
-            {_.get(user, 'type') !== 'admin' &&
+            {user && _.get(user, 'type') !== 'admin' &&
                     <FeatFormDialog store={props.store} snack={props.snack}/>}
             <div>
                 <Paper style={{ display: 'flex', flexDirection: 'column', padding: '40px', alignItems: 'center', textAlign: 'center' }}>
