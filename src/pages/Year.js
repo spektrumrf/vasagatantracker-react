@@ -101,18 +101,19 @@ class Year extends React.Component {
 
         let activeYearUnsub = activeYearDoc.onSnapshot(snapshot => {
             const data = snapshot.data();
-            if(data) {
+            if (data) {
                 const activeYear = data.activeYear.toString();
                 this.props.store.dispatch({
                     type: 'UPDATE_ACTIVE_YEAR',
                     activeYear
                 });
             }
+        }, () => {
         });
 
         let activeYearPropertiesUnsub = activeYearPropertiesDoc.onSnapshot(snapshot => {
             const data = snapshot.data();
-            if(data) {
+            if (data) {
                 const activeYearProperties = data;
                 this.props.store.dispatch({
                     type: 'UPDATE_YEAR_PROPERTIES',
@@ -132,6 +133,7 @@ class Year extends React.Component {
                     }
                 });
             }
+        }, () => {
         });
 
         let availableYearsUnsub = availableYearsCollection.onSnapshot(snapshot => {
@@ -146,6 +148,7 @@ class Year extends React.Component {
                     availableYears
                 });
             }
+        }, () => {
         });
 
         let locationsUnsub = locationsCollection.onSnapshot(snapshot => {
@@ -161,6 +164,7 @@ class Year extends React.Component {
                 type: 'UPDATE_LOCATIONS',
                 locations: sortedLocations
             });
+        }, () => {
         });
 
         let usersUnsub = usersCollection.onSnapshot(snapshot => {
@@ -170,6 +174,7 @@ class Year extends React.Component {
                 type: 'UPDATE_USERS',
                 users: sortedUsers
             });
+        }, () => {
         });
 
         let featsUnsub = featsCollection.onSnapshot(snapshot => {
@@ -182,6 +187,7 @@ class Year extends React.Component {
                 type: 'UPDATE_FEATS',
                 feats: sortedFilteredFeats
             });
+        }, () => {
         });
 
         this.setState({
@@ -203,34 +209,35 @@ class Year extends React.Component {
                         <ListItemText primary="Hemsida"/>
                     </ListItem>
                     {state.user &&
-                        <ListItem button component={Link} to={`/year/${this.props.year}/recentfeats`} data-next={true}>
-                            <ListItemText primary="Senaste prestationer"/>
-                        </ListItem>}
+                    <ListItem button component={Link} to={`/year/${this.props.year}/recentfeats`} data-next={true}>
+                        <ListItemText primary="Senaste prestationer"/>
+                    </ListItem>}
                     {state.user &&
-                        <ListItem button component={Link} to={`/year/${this.props.year}/feats`} data-next={true}>
-                            <ListItemText primary={ state.user.type === 'team' ? 'Egna prestationer' : 'Alla prestationer'}/>
-                        </ListItem>}
+                    <ListItem button component={Link} to={`/year/${this.props.year}/feats`} data-next={true}>
+                        <ListItemText primary={state.user.type === 'team' ? 'Egna prestationer' : 'Alla prestationer'}/>
+                    </ListItem>}
                     {state.user &&
-                        <ListItem button component={Link} to={`/year/${this.props.year}/users`} data-next={true}>
-                            <ListItemText primary="Lag"/>
-                        </ListItem>}
+                    <ListItem button component={Link} to={`/year/${this.props.year}/users`} data-next={true}>
+                        <ListItemText primary="Lag"/>
+                    </ListItem>}
                     {state.user &&
-                        <ListItem button component={Link} to={`/year/${this.props.year}/locations`} data-next={true}>
-                            <ListItemText primary="Platser"/>
-                        </ListItem>}
+                    <ListItem button component={Link} to={`/year/${this.props.year}/locations`} data-next={true}>
+                        <ListItemText primary="Platser"/>
+                    </ListItem>}
                     {state.user &&
-                        <ListItem button component={Link} to={`/year/${this.props.year}/statistics`} data-next={true}>
-                            <ListItemText primary="Statistik"/>
-                        </ListItem>}
+                    <ListItem button component={Link} to={`/year/${this.props.year}/statistics`} data-next={true}>
+                        <ListItemText primary="Statistik"/>
+                    </ListItem>}
                     {state.user && state.user.type === 'admin' &&
-                        <ListItem button component={Link} to={`/year/${this.props.year}/admin`} data-next={true}>
-                            <ListItemText primary="Admin"/>
-                        </ListItem>}
+                    <ListItem button component={Link} to={`/year/${this.props.year}/admin`} data-next={true}>
+                        <ListItemText primary="Admin"/>
+                    </ListItem>}
                 </List>
                 <Divider/>
                 <List>
                     {state.user ?
-                        <ListItem button component={Link} to={`/year/${this.props.year}`} data-next={true} onClick={this.logout}>
+                        <ListItem button component={Link} to={`/year/${this.props.year}`} data-next={true}
+                            onClick={this.logout}>
                             <ListItemText primary={`Logga ut som ${state.user.name}`}/>
                         </ListItem> :
                         <ListItem button component={Link} to={`/year/${this.props.year}/login`} data-next={true}>
@@ -267,19 +274,21 @@ class Year extends React.Component {
                         <AppBar position="fixed">
                             <Toolbar style={{ display: 'flex', alignItems: 'center' }} variant="dense">
                                 <div>
-                                    <IconButton style={styles.menuButton} color="inherit" aria-label="Menu" onClick={this.toggleDrawer(true)}>
+                                    <IconButton style={styles.menuButton} color="inherit" aria-label="Menu"
+                                        onClick={this.toggleDrawer(true)}>
                                         <Menu/>
                                     </IconButton>
                                 </div>
                                 <div>
                                     <Typography variant="h6" color="inherit" style={styles.grow}>
-                                    VasagatanTracker {this.props.year}
+                                        VasagatanTracker {this.props.year}
                                     </Typography>
                                 </div>
                             </Toolbar>
                         </AppBar>
                     </div>
-                    <SwipeableDrawer open={this.state.drawerOpen} onOpen={this.toggleDrawer(true)} onClose={this.toggleDrawer(false)}>
+                    <SwipeableDrawer open={this.state.drawerOpen} onOpen={this.toggleDrawer(true)}
+                        onClose={this.toggleDrawer(false)}>
                         <div
                             tabIndex={0}
                             role="button"
@@ -295,50 +304,50 @@ class Year extends React.Component {
                             <Home store={this.props.store}/>
                         }/>
                         <Route exact path='/year/:year/recentfeats' render={({ match }) => {
-                            if(state.user){
+                            if (state.user) {
                                 return <RecentFeats store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
                         }}/>
                         <Route exact path='/year/:year/feats' render={({ match }) => {
-                            if(state.user){
+                            if (state.user) {
                                 return <Feats store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
                         }}/>
                         <Route exact path='/year/:year/users' render={({ match }) => {
-                            if(state.user){
+                            if (state.user) {
                                 return <Users store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
                         }}/>
                         <Route exact path='/year/:year/statistics' render={({ match }) => {
-                            if(state.user){
+                            if (state.user) {
                                 return <Statistics store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
                         }}/>
                         <Route exact path='/year/:year/locations' render={({ match }) => {
-                            if(state.user){
+                            if (state.user) {
                                 return <Locations store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
                         }}/>
                         <Route exact path='/year/:year/admin' render={({ match }) => {
-                            if(state.user && state.user.type === 'admin'){
+                            if (state.user && state.user.type === 'admin') {
                                 return <Admin store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
                         }}/>
                         <Route exact path='/year/:year/login'
-                            render={( { match }) => {
-                                if(state.user) {
+                            render={({ match }) => {
+                                if (state.user) {
                                     return <Redirect to={`/year/${match.params.year}`}/>;
                                 } else {
                                     return <Login store={this.props.store} unsubs={this.state.unsubs}
