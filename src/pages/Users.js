@@ -9,9 +9,9 @@ const Users = props => {
     return (
         <div>
             { user &&  _.get(user, 'type') !== 'admin' &&
-                    <FeatFormDialog store={props.store} snack={props.snack}/>
+                    <FeatFormDialog store={props.store}/>
             }
-            <UsersList store={props.store} snack={props.snack}/> &nbsp;
+            <UsersList store={props.store}/> &nbsp;
             <UserChart store={props.store}/>
         </div>
     );

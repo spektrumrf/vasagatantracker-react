@@ -37,9 +37,9 @@ class Year extends React.Component {
 
     async componentDidUpdate(prevProps) {
         if (this.props.year !== prevProps.year) {
+            await this.logout();
             this.props.store.dispatch({ type: 'UPDATE_CHOSEN_YEAR', chosenYear: this.props.year });
             this.state.unsubs.forEach(unsub => unsub());
-            await this.logout();
             await this.initData();
         }
     }
@@ -58,32 +58,37 @@ class Year extends React.Component {
         const state = this.props.store.getState();
 
         this.state.unsubs.forEach(unsub => unsub());
-
         firestore.setAppYear(state.chosenYear);
-
-        this.registerRealtimeDataCallbacks();
 
         const loggedUserJSON = window.localStorage.getItem('loggedFeatappUser');
 
+        let user = null;
         if (loggedUserJSON) {
-            const user = JSON.parse(loggedUserJSON);
+            user = JSON.parse(loggedUserJSON);
+            await firestore.getAuth().signInWithCustomToken(user.firestoreToken);
             featService.setToken(user.token);
             userService.setToken(user.token);
             locationService.setToken(user.token);
             propertiesService.setToken(user.token);
+        } else {
+            await firestore.getAuth().signInAnonymously();
         }
+
+        this.registerRealtimeDataCallbacks();
 
         this.props.store.dispatch({
             type: 'UPDATE_USER',
-            user: loggedUserJSON ? JSON.parse(loggedUserJSON) : null
+            user: user
         });
     };
 
     logout = async () => {
+        await firestore.getAuth().signOut();
         window.localStorage.removeItem('loggedFeatappUser');
         this.props.store.dispatch({
             type: 'LOGOUT'
         });
+        await this.initData();
     };
 
     registerRealtimeDataCallbacks = () => {
@@ -201,23 +206,19 @@ class Year extends React.Component {
                         <ListItem button component={Link} to={`/year/${this.props.year}/recentfeats`} data-next={true}>
                             <ListItemText primary="Senaste prestationer"/>
                         </ListItem>}
-                    {state.user && state.user.type === 'team' &&
+                    {state.user &&
                         <ListItem button component={Link} to={`/year/${this.props.year}/feats`} data-next={true}>
-                            <ListItemText primary="Egna prestationer"/>
+                            <ListItemText primary={ state.user.type === 'team' ? 'Egna prestationer' : 'Alla prestationer'}/>
                         </ListItem>}
-                    {state.user && state.user.type === 'admin' &&
-                    <ListItem button component={Link} to={`/year/${this.props.year}/feats`} data-next={true}>
-                        <ListItemText primary="Alla prestationer"/>
-                    </ListItem>}
-                    {(state.user || this.props.year !== state.activeYear.toString()) &&
+                    {state.user &&
                         <ListItem button component={Link} to={`/year/${this.props.year}/users`} data-next={true}>
                             <ListItemText primary="Lag"/>
                         </ListItem>}
-                    {(state.user || this.props.year !== state.activeYear.toString()) &&
+                    {state.user &&
                         <ListItem button component={Link} to={`/year/${this.props.year}/locations`} data-next={true}>
                             <ListItemText primary="Platser"/>
                         </ListItem>}
-                    {(state.user || this.props.year !== state.activeYear.toString()) &&
+                    {state.user &&
                         <ListItem button component={Link} to={`/year/${this.props.year}/statistics`} data-next={true}>
                             <ListItemText primary="Statistik"/>
                         </ListItem>}
@@ -291,46 +292,46 @@ class Year extends React.Component {
 
                     <div>
                         <Route exact path='/year/:year' render={() =>
-                            <Home store={this.props.store} snack={this.props.snack}/>
+                            <Home store={this.props.store}/>
                         }/>
                         <Route exact path='/year/:year/recentfeats' render={({ match }) => {
                             if(state.user){
-                                return <RecentFeats store={this.props.store} snack={this.props.snack}/>;
+                                return <RecentFeats store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
                         }}/>
                         <Route exact path='/year/:year/feats' render={({ match }) => {
                             if(state.user){
-                                return <Feats store={this.props.store} snack={this.props.snack}/>;
+                                return <Feats store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
                         }}/>
                         <Route exact path='/year/:year/users' render={({ match }) => {
-                            if(state.user || state.activeYear.toString() !== match.params.year){
-                                return <Users store={this.props.store} snack={this.props.snack}/>;
+                            if(state.user){
+                                return <Users store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
                         }}/>
                         <Route exact path='/year/:year/statistics' render={({ match }) => {
-                            if(state.user || state.activeYear.toString() !== match.params.year){
-                                return <Statistics store={this.props.store} snack={this.props.snack}/>;
+                            if(state.user){
+                                return <Statistics store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
                         }}/>
                         <Route exact path='/year/:year/locations' render={({ match }) => {
-                            if(state.user || state.activeYear.toString() !== match.params.year){
-                                return <Locations store={this.props.store} snack={this.props.snack}/>;
+                            if(state.user){
+                                return <Locations store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
                         }}/>
                         <Route exact path='/year/:year/admin' render={({ match }) => {
                             if(state.user && state.user.type === 'admin'){
-                                return <Admin store={this.props.store} snack={this.props.snack}/>;
+                                return <Admin store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
@@ -341,7 +342,7 @@ class Year extends React.Component {
                                     return <Redirect to={`/year/${match.params.year}`}/>;
                                 } else {
                                     return <Login store={this.props.store} unsubs={this.state.unsubs}
-                                        realtime={this.registerRealtimeDataCallbacks} snack={this.props.snack}/>;
+                                        realtime={this.registerRealtimeDataCallbacks}/>;
                                 }
                             }}/>
                     </div>

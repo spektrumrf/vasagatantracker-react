@@ -9,8 +9,6 @@ const defaultState = {
     activeYear: moment().year().toString(),
     startDate: null,
     realtimeCutoffTime: null,
-    snackMessage: null,
-    snackOpen: false,
     info: {},
     finished: false,
     availableYears: [moment().year().toString()]
@@ -36,14 +34,12 @@ const vasagatanReducer = (state = defaultState, action) => {
         return { ...state, feats: action.feats };
     case 'UPDATE_USERS':
         return { ...state, users: action.users };
-    case 'UPDATE_SNACK':
-        return { ...state, snackMessage: action.message, snackOpen: action.open };
     case 'UPDATE_LOCATIONS':
         return { ...state, locations: action.locations };
     case 'LOGIN':
         return { ...state, user: action.user };
     case 'LOGOUT':
-        return { ...state, user: null };
+        return { ...defaultState, user: null };
     default:
         return state;
     }

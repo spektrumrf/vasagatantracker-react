@@ -8,8 +8,8 @@ const RecentFeats = props => {
     return (
         <div>
             { user && _.get(user, 'type') !== 'admin' &&
-                    <FeatFormDialog store={props.store} snack={props.snack}/>}
-            <FeatsList store={props.store} filter='all' snack={props.snack}/>
+                    <FeatFormDialog store={props.store}/>}
+            <FeatsList store={props.store} filter='all'/>
         </div>
     );
 };

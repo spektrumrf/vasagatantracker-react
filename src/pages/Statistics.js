@@ -24,7 +24,7 @@ class Statistics extends React.Component {
         return (
             <div>
                 { user && _.get(user, 'type') !== 'admin' &&
-                <FeatFormDialog store={this.props.store} snack={this.props.snack}/>}
+                <FeatFormDialog store={this.props.store}/>}
                 <Paper square>
                     <Tabs value={this.state.tab} indicatorColor="primary" textColor="primary" onChange={this.handleChange}>
                         <Tab label="Poängställning"/>

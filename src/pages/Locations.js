@@ -8,8 +8,8 @@ const Locations = props => {
     return (
         <div>
             { user && _.get(user, 'type') !== 'admin' &&
-                    <FeatFormDialog store={props.store} snack={props.snack}/>}
-            <LocationsList store={props.store} snack={props.snack}/>
+                    <FeatFormDialog store={props.store}/>}
+            <LocationsList store={props.store}/>
         </div>
     );
 };

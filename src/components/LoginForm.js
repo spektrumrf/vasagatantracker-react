@@ -39,9 +39,10 @@ class LoginForm extends React.Component {
 
             firestore.setAppYear(state.chosenYear);
 
-            this.props.realtime();
-
             window.localStorage.setItem('loggedFeatappUser', JSON.stringify(user));
+
+            await firestore.getAuth().signInWithCustomToken(user.firestoreToken);
+            this.props.realtime();
 
             featService.setToken(user.token);
             userService.setToken(user.token);
@@ -49,7 +50,6 @@ class LoginForm extends React.Component {
             propertiesService.setToken(user.token);
 
             this.setState({ loading: false, loadingActive: false });
-
 
             this.props.store.dispatch({
                 type: 'LOGIN',

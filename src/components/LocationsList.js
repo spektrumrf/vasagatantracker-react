@@ -99,7 +99,7 @@ class LocationsList extends React.Component{
                     columns={columns}
                     options={options}
                 />
-                <Location store={this.props.store} clickedLocationId={this.state.clickedLocationId} clearClickedLocation={this.clearClickedLocation} snack={this.props.snack}/>
+                <Location store={this.props.store} clickedLocationId={this.state.clickedLocationId} clearClickedLocation={this.clearClickedLocation}/>
             </div>
         );
     }

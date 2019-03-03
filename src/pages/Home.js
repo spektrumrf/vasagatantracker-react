@@ -24,7 +24,7 @@ const Home = props => {
     return (
         <div>
             {user && _.get(user, 'type') !== 'admin' &&
-                    <FeatFormDialog store={props.store} snack={props.snack}/>}
+                    <FeatFormDialog store={props.store}/>}
             <div style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '500px'}}>
                 <Paper style={{ display: 'flex', flexDirection: 'column', padding: '40px', alignItems: 'center', textAlign: 'center' }}>
                     <Typography style={{ paddingBottom: '20px' }} variant="h4">Tid till Approbatur i Vasagatan</Typography>
