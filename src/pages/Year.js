@@ -39,7 +39,6 @@ class Year extends React.Component {
         if (this.props.year !== prevProps.year) {
             await this.logout();
             this.props.store.dispatch({ type: 'UPDATE_CHOSEN_YEAR', chosenYear: this.props.year });
-            this.state.unsubs.forEach(unsub => unsub());
             await this.initData();
         }
     }
@@ -88,6 +87,7 @@ class Year extends React.Component {
         this.props.store.dispatch({
             type: 'LOGOUT'
         });
+        this.props.store.dispatch({ type: 'UPDATE_CHOSEN_YEAR', chosenYear: this.props.year });
         await this.initData();
     };
 
@@ -269,7 +269,7 @@ class Year extends React.Component {
         };
         return (
             <Router>
-                <div style={{ marginLeft: '20px', marginRight: '20px' }}>
+                <div style={{ marginLeft: '20px', marginRight: '20px', marginBottom: '100px' }}>
                     <div style={styles.root}>
                         <AppBar position="fixed">
                             <Toolbar style={{ display: 'flex', alignItems: 'center' }} variant="dense">
