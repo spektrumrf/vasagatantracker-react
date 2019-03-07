@@ -51,6 +51,7 @@ class Year extends React.Component {
 
     async componentWillUnmount() {
         this.state.unsubs.forEach(unsub => unsub());
+        await firestore.getAuth().signOut();
     }
 
     initData = async () => {
