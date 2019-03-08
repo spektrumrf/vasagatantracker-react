@@ -61,17 +61,24 @@ class Year extends React.Component {
         firestore.setAppYear(state.chosenYear);
 
         const loggedUserJSON = window.localStorage.getItem('loggedFeatappUser');
+        firestore.getAuth().onAuthStateChanged(async function(user) {
+            if (user) {
+                await user.getIdToken(true);
+            }
+        });
 
         let user = null;
         if (loggedUserJSON) {
             user = JSON.parse(loggedUserJSON);
-            await firestore.getAuth().signInWithCustomToken(user.firestoreToken);
             featService.setToken(user.token);
             userService.setToken(user.token);
             locationService.setToken(user.token);
             propertiesService.setToken(user.token);
         } else {
-            await firestore.getAuth().signInAnonymously();
+            firestore.getAuth().signInAnonymously()
+                .catch((error) => {
+                    console.log('anon error', error);
+                });
         }
 
         this.registerRealtimeDataCallbacks();
