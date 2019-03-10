@@ -17,6 +17,8 @@ import Add from '@material-ui/icons/Add';
 import Slide from "../../node_modules/@material-ui/core/Slide/Slide";
 import Loading from "./Loading";
 import _ from 'lodash';
+import uuid from 'uuid/v4';
+import firestore from '../firestore';
 
 class FeatFormDialog extends React.Component{
     constructor(props) {
@@ -56,30 +58,34 @@ class FeatFormDialog extends React.Component{
                 return this.setState({ loading: false, loadingActive: true, message: 'Lämna en förklarande kommentar om du vill spara en bonusuppgift eller om platsen inte finns i listan.'  });
             }
 
-            let proofs = [];
-            for (let file of this.state.newFiles) {
-                if (file.type.includes('image')) {
-                    const compressedImage = await this.processImage(file);
-                    const base64 = await this.getBase64(compressedImage);
-                    proofs = proofs.concat(base64);
-                } else {
-                    return this.setState({ loading: false, loadingActive: true, message: 'Endast bilder duger som bevis!'  });
-
-                }
-            }
-
             const state = this.props.store.getState();
 
             const feat = {
+                id: uuid(),
                 value: parseFloat(newFeatValue),
                 location: newFeatLocation.id,
                 user: state.user.id,
                 comment: newFeatComment,
                 content: { öl: 0, cider: 0, lonkero: 0, vin: 0, drink: 0, mat: 0, shot: 0, annat: 0 },
                 adminComment: '',
-                proofs
             };
 
+            let proofIds = [];
+            let proofPromises = [];
+            for (let file of this.state.newFiles) {
+                if (file.type.includes('image')) {
+                    const compressedImage = await this.processImage(file);
+                    const proofStorageId = uuid();
+                    const proofRef = firestore.getStorage().ref().child(`years/${state.chosenYear}/feats/${feat.id}/proofs/${proofStorageId}.jpg`);
+                    console.log(proofStorageId);
+                    proofIds.push(proofStorageId);
+                    proofPromises.push(proofRef.put(compressedImage));
+                } else {
+                    return this.setState({ loading: false, loadingActive: true, message: 'Endast bilder duger som bevis!'  });
+                }
+            }
+            await Promise.all(proofPromises);
+            feat.proofs = proofIds;
 
             await featService.create(feat, state.chosenYear);
 

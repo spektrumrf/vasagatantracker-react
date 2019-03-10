@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
+import 'firebase/storage';
 
 const config = {
     apiKey: 'AIzaSyDe8mlwCePLeJ5yAwDRe7iWMb15y1M-o_o',
@@ -23,6 +24,10 @@ const getAuth = () => {
     return firebase.auth();
 };
 
+const getStorage = () => {
+    return firebase.storage();
+};
+
 const getDatabase = () => {
     return db;
 };
@@ -39,4 +44,4 @@ const getYears = () => {
     return firebase.firestore().collection('years');
 };
 
-export default { getDatabase, getCollection, setAppYear, getAuth, getProperties, getYears };
+export default { getDatabase, getCollection, setAppYear, getAuth, getProperties, getYears, getStorage };

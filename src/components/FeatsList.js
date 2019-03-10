@@ -1,9 +1,9 @@
 import React from 'react';
+import firestore from '../firestore';
 import Feat from './Feat';
 import MUIDataTable from 'mui-datatables';
 import moment from 'moment';
 import _ from 'lodash';
-import proofService from '../services/proofs';
 import localisation from '../localisation';
 
 class FeatsList extends React.Component {
@@ -26,9 +26,13 @@ class FeatsList extends React.Component {
 
             if (_.isEmpty(this.state.proofs[featId])) {
                 this.setState({ clickedFeatId: featId });
-                const proof = await proofService.get(featId, this.props.store.getState().activeYear);
+                const proofPromises = feat.proofs ? feat.proofs.map(proofId => {
+                    const proofRef = firestore.getStorage().ref().child(`years/${state.chosenYear}/feats/${feat.id}/proofs/${proofId}.jpg`);
+                    return proofRef.getDownloadURL();
+                }) : [];
+                const proof = await Promise.all(proofPromises);
                 const newState = this.state;
-                newState.proofs[featId] = proof.proofs ? proof.proofs : [];
+                newState.proofs[featId] = proof;
                 this.setState(newState);
             } else {
                 this.setState({ clickedFeatId: featId });
