@@ -16,6 +16,7 @@ import Typography from '../../node_modules/@material-ui/core/Typography/Typograp
 import FeatEditFormDialog from './FeatEditFormDialog';
 import Slide from '../../node_modules/@material-ui/core/Slide/Slide';
 import Loading from './Loading';
+import firestore from '../firestore';
 
 class Feat extends React.Component {
     constructor(props) {
@@ -50,7 +51,6 @@ class Feat extends React.Component {
                 this.setState({ loading: true, loadingActive: true });
                 await featService.remove(feat.id, state.chosenYear);
                 this.setState({ open: false, loading: false, loadingActive: false });
-
                 this.props.clearClickedFeat()();
             }
         } catch (exception) {

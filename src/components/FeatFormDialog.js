@@ -60,6 +60,15 @@ class FeatFormDialog extends React.Component{
 
             const state = this.props.store.getState();
 
+            const proofs = [];
+            for (let file of this.state.newFiles) {
+                if (file.type.includes('image')) {
+                    const compressedImage = await this.processImage(file);
+                    proofs.push(compressedImage);
+                } else {
+                    return this.setState({ loading: false, loadingActive: true, message: 'Endast bilder duger som bevis!'  });
+                }
+            }
             const feat = {
                 id: uuid(),
                 value: parseFloat(newFeatValue),
@@ -68,24 +77,8 @@ class FeatFormDialog extends React.Component{
                 comment: newFeatComment,
                 content: { öl: 0, cider: 0, lonkero: 0, vin: 0, drink: 0, mat: 0, shot: 0, annat: 0 },
                 adminComment: '',
+                proofs
             };
-
-            let proofIds = [];
-            let proofPromises = [];
-            for (let file of this.state.newFiles) {
-                if (file.type.includes('image')) {
-                    const compressedImage = await this.processImage(file);
-                    const proofStorageId = uuid();
-                    const proofRef = firestore.getStorage().ref().child(`years/${state.chosenYear}/feats/${feat.id}/proofs/${proofStorageId}.jpg`);
-                    console.log(proofStorageId);
-                    proofIds.push(proofStorageId);
-                    proofPromises.push(proofRef.put(compressedImage));
-                } else {
-                    return this.setState({ loading: false, loadingActive: true, message: 'Endast bilder duger som bevis!'  });
-                }
-            }
-            await Promise.all(proofPromises);
-            feat.proofs = proofIds;
 
             await featService.create(feat, state.chosenYear);
 

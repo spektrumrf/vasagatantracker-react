@@ -27,12 +27,12 @@ class FeatsList extends React.Component {
             if (_.isEmpty(this.state.proofs[featId])) {
                 this.setState({ clickedFeatId: featId });
                 const proofPromises = feat.proofs ? feat.proofs.map(proofId => {
-                    const proofRef = firestore.getStorage().ref().child(`years/${state.chosenYear}/feats/${feat.id}/proofs/${proofId}.jpg`);
+                    const proofRef = firestore.getStorage().ref().child(proofId);
                     return proofRef.getDownloadURL();
                 }) : [];
-                const proof = await Promise.all(proofPromises);
+                const proofs = await Promise.all(proofPromises);
                 const newState = this.state;
-                newState.proofs[featId] = proof;
+                newState.proofs[featId] = proofs;
                 this.setState(newState);
             } else {
                 this.setState({ clickedFeatId: featId });
