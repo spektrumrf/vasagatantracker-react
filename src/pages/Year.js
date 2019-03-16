@@ -77,7 +77,7 @@ class Year extends React.Component {
         } else {
             firestore.getAuth().signInAnonymously()
                 .catch((error) => {
-                    console.log('anon error', error);
+                    console.log('Anonymous sign in error:', error);
                 });
         }
 

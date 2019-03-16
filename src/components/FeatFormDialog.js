@@ -18,7 +18,6 @@ import Slide from "../../node_modules/@material-ui/core/Slide/Slide";
 import Loading from "./Loading";
 import _ from 'lodash';
 import uuid from 'uuid/v4';
-import firestore from '../firestore';
 
 class FeatFormDialog extends React.Component{
     constructor(props) {
@@ -64,7 +63,8 @@ class FeatFormDialog extends React.Component{
             for (let file of this.state.newFiles) {
                 if (file.type.includes('image')) {
                     const compressedImage = await this.processImage(file);
-                    proofs.push(compressedImage);
+                    const imageBase64 = await this.getBase64(compressedImage);
+                    proofs.push(imageBase64);
                 } else {
                     return this.setState({ loading: false, loadingActive: true, message: 'Endast bilder duger som bevis!'  });
                 }

@@ -13,7 +13,6 @@ const config = {
 };
 
 firebase.initializeApp(config);
-firebase.firestore().settings({ timestampsInSnapshots: true });
 
 let db;
 

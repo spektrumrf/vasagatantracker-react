@@ -26,8 +26,8 @@ class FeatsList extends React.Component {
 
             if (_.isEmpty(this.state.proofs[featId])) {
                 this.setState({ clickedFeatId: featId });
-                const proofPromises = feat.proofs ? feat.proofs.map(proofId => {
-                    const proofRef = firestore.getStorage().ref().child(proofId);
+                const proofPromises = feat.proofs ? feat.proofs.map(proofPath => {
+                    const proofRef = firestore.getStorage().ref().child(proofPath);
                     return proofRef.getDownloadURL();
                 }) : [];
                 const proofs = await Promise.all(proofPromises);
