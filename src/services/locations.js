@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'https://vasagatantracker-spektrumrf.herokuapp.com/api/locations';
+const baseUrl = process.env.NODE_ENV === 'production' ? 'https://vasagatantracker-spektrumrf.herokuapp.com/api/locations' : '/api/locations';
 
 let token = null;
 
