@@ -9,7 +9,10 @@ import CssBaseline from '../node_modules/@material-ui/core/CssBaseline/CssBaseli
 
 const theme = createMuiTheme({
     palette: {
-        primary: pink,
+        primary: {
+            main: '#ff6cac',
+            contrastText: '#000'
+        },
         secondary: blueGrey,
     },
     typography: {
