@@ -30,9 +30,12 @@ class FeatsList extends React.Component {
                     const proofRef = firestore.getStorage().ref().child(proofPath);
                     return proofRef.getDownloadURL();
                 }) : [];
-                const proofs = await Promise.all(proofPromises);
+                const proofs = await Promise.all(proofPromises)
+                    .catch((error) => {
+                        console.log('Något bevis kunde inte hittas, sorry!', error);
+                    });
                 const newState = this.state;
-                newState.proofs[featId] = proofs;
+                newState.proofs[featId] = proofs ? proofs : [];
                 this.setState(newState);
             } else {
                 this.setState({ clickedFeatId: featId });
