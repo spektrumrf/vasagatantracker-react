@@ -8,14 +8,14 @@ const setToken = (newToken) => {
     token = `bearer ${newToken}`;
 };
 
-const update = (newObject, year) => {
+const update = async (newObject, year) => {
     const config = {
         headers: { 'Authorization': token },
         params: { year }
     };
 
-    const request = axios.put(baseUrl, newObject, config);
-    return request.then(response => response.data);
+    const response = await axios.put(baseUrl, newObject, config);
+    return response.data;
 };
 
 export default { update, setToken };

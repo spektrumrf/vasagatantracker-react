@@ -8,9 +8,9 @@ import Button from '../../node_modules/@material-ui/core/Button/Button';
 import { DateTimePicker } from 'material-ui-pickers';
 import MomentUtils from '@date-io/moment';
 import moment from 'moment';
-import Grid from "../../node_modules/@material-ui/core/Grid/Grid";
-import _ from "lodash";
-import Loading from "../components/Loading";
+import Grid from '../../node_modules/@material-ui/core/Grid/Grid';
+import _ from 'lodash';
+import Loading from '../components/Loading';
 
 class Admin extends React.Component {
     constructor(props) {
@@ -42,8 +42,9 @@ class Admin extends React.Component {
         try {
             if (window.confirm('Är du säker att du vill ändra starttiden?')) {
                 this.setState({ loading: true, loadingActive: true });
-                await propertiesService.update({startDate: this.state.newStartDate}, this.state.chosenYear);
-                this.setState({startDate: this.state.newStartDate, open: false, loading: false, loadingActive: false});
+                await propertiesService.update({ startDate: this.state.newStartDate }, this.state.chosenYear);
+                console.log('updated');
+                this.setState({ startDate: this.state.newStartDate, open: false, loading: false, loadingActive: false });
                 this.props.store.dispatch({
                     type: 'UPDATE_START_DATE',
                     startDate: this.state.newStartDate
@@ -59,8 +60,8 @@ class Admin extends React.Component {
         try {
             if (window.confirm('Är du säker att du vill ändra realtime cutoff tiden?')) {
                 this.setState({ loading: true, loadingActive: true });
-                await propertiesService.update({realtimeCutoffTime: this.state.newRealtimeCutoffTime}, this.state.chosenYear);
-                this.setState({realtimeCutoffTime: this.state.newRealtimeCutoffTime, open: false, loading: false, loadingActive: false});
+                await propertiesService.update({ realtimeCutoffTime: this.state.newRealtimeCutoffTime }, this.state.chosenYear);
+                this.setState({ realtimeCutoffTime: this.state.newRealtimeCutoffTime, open: false, loading: false, loadingActive: false });
                 this.props.store.dispatch({
                     type: 'UPDATE_CUTOFF_TIME',
                     realtimeCutoffTime: this.state.newRealtimeCutoffTime

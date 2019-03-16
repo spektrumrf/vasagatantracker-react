@@ -1,47 +1,69 @@
 import React from 'react';
 import locationService from '../services/locations';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpandMore from '../../node_modules/@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Button from '../../node_modules/@material-ui/core/Button/Button';
 import _ from 'lodash';
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import Loading from "./Loading";
+import DialogActions from "@material-ui/core/DialogActions";
+import Slide from "../../node_modules/@material-ui/core/Slide/Slide";
 
 class LocationFormDialog extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            newLocationName: ''
+            newLocationName: '',
+            open: false,
+            loading: false,
+            loadingActive: false,
+            message: ''
         };
     }
 
     addLocation = async () => {
         try {
+            this.setState({ loading: true, loadingActive: true, message: '' });
             if (!this.state.newLocationName) {
-                return { error: 'Information saknas.' };
+                return this.setState({ loading: false, loadingActive: true, message: 'Information saknas' });
             }
             const location = {
                 name: this.state.newLocationName
             };
             await locationService.create(location, this.props.store.getState().chosenYear);
+            this.setState({
+                newLocationName: '',
+                open: false,
+                loading: false,
+                loadingActive: false,
+                message: ''
+            });
         } catch (exception) {
             const error = _.get(exception, 'request.data.error');
-            console.log(error ? error : 'Något katastrofalt har inträffat... Försök igen om en stund!' );
+            this.setState({ loading: false, loadingActive: true, message: error ? error : 'Skapandet av laget misslyckades, pröva igen!' });
+
         }
+    };
+
+    transition = (props) => {
+        return <Slide direction="up" {...props} />;
+    };
+
+    closeDialog = () => {
+        this.setState({ open: false, loading: false, loadingActive: false, message: ''  });
     };
 
     render() {
         return (
             <div>
-                <ExpansionPanel>
-                    <ExpansionPanelSummary style={{ background: 'grey' }} expandIcon={<ExpandMore/>}>
-                        <Typography variant="h6">Ny plats</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails style={{ display: 'flex', flexDirection: 'column', padding: '40px', alignItems: 'center' }} >
+                <Button variant="contained" color="primary" size="large" onClick={() => {
+                    this.setState({ open: true });
+                }}>Ny plats</Button>
+                <Dialog fullScreen maxWidth="md" open={this.state.open} TransitionComponent={this.transition} transitionDuration={1000}>
+                    <DialogContent style={{ display: 'flex', flexDirection: 'column', padding: '40px', alignItems: 'center' }}>
+                        <Typography variant="h5">Ny plats</Typography>
                         <form autoComplete="off">
                             <FormControl fullWidth>
                                 <TextField
@@ -55,11 +77,13 @@ class LocationFormDialog extends React.Component {
                                 />
                             </FormControl>
                         </form>
-                    </ExpansionPanelDetails>
-                    <ExpansionPanelActions style={{ paddingRight: '20px', paddingBottom: '20px' }}>
+                    </DialogContent>
+                    <Loading active={this.state.loadingActive} loading={this.state.loading} message={this.state.message}/>
+                    <DialogActions style={{ paddingBottom: '20px', paddingRight: '20px' }}>
+                        <Button variant="contained" color="secondary" onClick={this.closeDialog}>Stäng</Button>
                         <Button variant="contained" onClick={this.addLocation} color="primary">Skapa</Button>
-                    </ExpansionPanelActions>
-                </ExpansionPanel>
+                    </DialogActions>
+                </Dialog>
             </div>
         );
     }

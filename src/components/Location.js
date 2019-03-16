@@ -94,7 +94,7 @@ class Location extends React.Component{
                                 <Divider/>
                                 <ListItem>
                                     <ListItemText
-                                        primary="Prestation"
+                                        primary="Prestationer"
                                         secondary={locationFeats}
                                     />
                                 </ListItem>
