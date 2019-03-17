@@ -11,6 +11,11 @@
       "src": "favicon-196x196.png",
       "sizes": "196x196",
       "type": "image/png"
+    },
+    {
+      "src": "spektrum_favicon_512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ],
   "start_url": "./index.html",
