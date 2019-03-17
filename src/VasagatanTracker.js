@@ -3,7 +3,6 @@ import Year from './pages/Year';
 import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
 import { createMuiTheme } from '@material-ui/core/styles';
 import MuiThemeProvider from '../node_modules/@material-ui/core/es/styles/MuiThemeProvider';
-import pink from '@material-ui/core/colors/pink';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import CssBaseline from '../node_modules/@material-ui/core/CssBaseline/CssBaseline';
 
