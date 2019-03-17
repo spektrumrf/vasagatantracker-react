@@ -1,13 +1,5 @@
 import React from 'react';
 import { HashRouter as Router, Link, Route, Redirect } from 'react-router-dom';
-import Home from './Home';
-import RecentFeats from './RecentFeats';
-import Feats from './Feats';
-import Users from './Users';
-import Statistics from './Statistics';
-import Locations from './Locations';
-import Admin from './Admin';
-import Login from './Login';
 import firestore from '../firestore';
 import featService from '../services/feats';
 import userService from '../services/users';
@@ -23,8 +15,20 @@ import IconButton from '@material-ui/core/IconButton';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Menu from '@material-ui/icons/Menu';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import moment from 'moment';
 import _ from 'lodash';
+import Loadable from 'react-loadable';
+
+const Loading = (props) => <div style={{ display: 'flex', justifyContent: 'center' }}><CircularProgress/></div>;
+const AsyncHome = Loadable({ loader: () => import('./Home'), loading: Loading });
+const AsyncRecentFeats = Loadable({ loader: () => import('./RecentFeats'), loading: Loading });
+const AsyncFeats = Loadable({ loader: () => import('./Feats'), loading: Loading });
+const AsyncUsers = Loadable({ loader: () => import('./Users'), loading: Loading });
+const AsyncStatistics = Loadable({ loader: () => import('./Statistics'), loading: Loading });
+const AsyncLocations = Loadable({ loader: () => import('./Locations'), loading: Loading });
+const AsyncAdmin = Loadable({ loader: () => import('./Admin'), loading: Loading });
+const AsyncLogin = Loadable({ loader: () => import('./Login'), loading: Loading });
 
 class Year extends React.Component {
     constructor(props) {
@@ -309,46 +313,46 @@ class Year extends React.Component {
 
                     <div>
                         <Route exact path='/year/:year' render={() =>
-                            <Home store={this.props.store}/>
+                            <AsyncHome store={this.props.store}/>
                         }/>
                         <Route exact path='/year/:year/recentfeats' render={({ match }) => {
                             if (state.user) {
-                                return <RecentFeats store={this.props.store}/>;
+                                return <AsyncRecentFeats store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
                         }}/>
                         <Route exact path='/year/:year/feats' render={({ match }) => {
                             if (state.user) {
-                                return <Feats store={this.props.store}/>;
+                                return <AsyncFeats store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
                         }}/>
                         <Route exact path='/year/:year/users' render={({ match }) => {
                             if (state.user) {
-                                return <Users store={this.props.store}/>;
+                                return <AsyncUsers store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
                         }}/>
                         <Route exact path='/year/:year/statistics' render={({ match }) => {
                             if (state.user) {
-                                return <Statistics store={this.props.store}/>;
+                                return <AsyncStatistics store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
                         }}/>
                         <Route exact path='/year/:year/locations' render={({ match }) => {
                             if (state.user) {
-                                return <Locations store={this.props.store}/>;
+                                return <AsyncLocations store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
                         }}/>
                         <Route exact path='/year/:year/admin' render={({ match }) => {
                             if (state.user && state.user.type === 'admin') {
-                                return <Admin store={this.props.store}/>;
+                                return <AsyncAdmin store={this.props.store}/>;
                             } else {
                                 return <Redirect to={`/year/${match.params.year}/login`}/>;
                             }
@@ -358,7 +362,7 @@ class Year extends React.Component {
                                 if (state.user) {
                                     return <Redirect to={`/year/${match.params.year}`}/>;
                                 } else {
-                                    return <Login store={this.props.store} unsubs={this.state.unsubs}
+                                    return <AsyncLogin store={this.props.store} unsubs={this.state.unsubs}
                                         realtime={this.registerRealtimeDataCallbacks}/>;
                                 }
                             }}/>
