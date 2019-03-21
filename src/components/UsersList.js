@@ -1,8 +1,10 @@
 import React from 'react';
 import User from './User';
-import MUIDataTable from 'mui-datatables';
 import _ from 'lodash';
-import localisation from '../localisation';
+import { Grid, Table, TableHeaderRow } from '@devexpress/dx-react-grid-material-ui';
+import { IntegratedSorting, SortingState } from '@devexpress/dx-react-grid';
+import Typography from '../../node_modules/@material-ui/core/Typography/Typography';
+import Paper from '../../node_modules/@material-ui/core/Paper/Paper';
 
 class UsersList extends React.Component{
     constructor(props) {
@@ -17,40 +19,30 @@ class UsersList extends React.Component{
     };
 
     render() {
+        const state = this.props.store.getState();
+        const TableRow = ({ row, ...restProps }) => (
+            <Table.Row
+                {...restProps}
+                onClick={() => {
+                    if (_.get(state.user, 'type') === 'admin') {
+                        this.setState({ clickedUserId: row.id });
+                    }
+                }}
+            />
+        );
         const columns = [
-            {
-                name: 'Id',
-                options: {
-                    display: 'excluded',
-                    filter: false,
-                    sort: false
-                }
-            },
-            {
-                name: 'Namn',
-                options: {
-                    filter: false,
-                    sort: false
-                }
-            },
-            {
-                name: 'Poäng',
-                options: {
-                    filter: false,
-                    sort: true
-                }
-            },
-            {
-                name: 'Poäng med koefficient',
-                options: {
-                    filter: false,
-                    sort: true
-                }
-            }];
+            { name: 'name', title: 'Namn' },
+            { name: 'points', title: 'Poäng' },
+            { name: 'pointsCoefficient', title: 'Poäng med koefficient' },
+        ];
+        const columnExtensions = [
+            { columnName: 'name', width: 130, wordWrapEnabled: true },
+            { columnName: 'points', width: 100 },
+            { columnName: 'pointsCoefficient', width: 180 }];
         const userData = _(this.props.store.getState().users)
             .filter(user => user.type === 'team')
             .map(user => {
-                const userPoints = this.props.store.getState().feats.reduce((sum, feat) => {
+                const userPoints = state.feats.reduce((sum, feat) => {
                     if (user.id === feat.user && feat.approved) {
                         return sum + feat.value;
                     } else {
@@ -58,32 +50,22 @@ class UsersList extends React.Component{
                     }
                 }, 0);
                 const userPointsWithCoefficient = Math.round(userPoints * parseFloat(user.coefficient) * 100) / 100;
-                return [user.id, user.name, userPoints, userPointsWithCoefficient];
+                return { id: user.id, name: user.name, points: userPoints, pointsCoefficient: userPointsWithCoefficient };
             })
             .value();
-        const options = {
-            responsive: 'scroll',
-            pagination: false,
-            selectableRows: false,
-            filter: false,
-            print: false,
-            download: false,
-            onRowClick: (rowData) => {
-                const user = this.props.store.getState().user;
-                if (_.get(user, 'type') === 'admin') {
-                    this.setState({ clickedUserId: rowData[0] });
-                }
-            },
-            textLabels: localisation
-        };
         return (
-            <div style={{ maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto' }}>
-                <MUIDataTable
-                    title={'Lag'}
-                    data={userData}
-                    columns={columns}
-                    options={options}
-                />
+            <div style={{ maxWidth: '410px', marginLeft: 'auto', marginRight: 'auto' }}>
+                <Paper>
+                    <Grid rows={userData} columns={columns}>
+                        <SortingState defaultSorting={[]}/>
+                        <IntegratedSorting />
+                        <Table rowComponent={TableRow} columnExtensions={columnExtensions} />
+                        <TableHeaderRow showSortingControls />
+                        <Typography variant="h6" style={{ paddingTop: '10px', paddingLeft: '20px' }}>
+                            Lag
+                        </Typography>
+                    </Grid>
+                </Paper>
                 <User store={this.props.store} clickedUserId={this.state.clickedUserId} clearClickedUser={this.clearClickedUser}/>
             </div>
         );

@@ -16,7 +16,7 @@ const theme = createMuiTheme({
     },
     typography: {
         useNextVariants: true,
-    },
+    }
 });
 
 class VasagatanTracker extends React.Component {

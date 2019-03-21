@@ -43,7 +43,6 @@ class Admin extends React.Component {
             if (window.confirm('Är du säker att du vill ändra starttiden?')) {
                 this.setState({ loading: true, loadingActive: true });
                 await propertiesService.update({ startDate: this.state.newStartDate }, this.state.chosenYear);
-                console.log('updated');
                 this.setState({ startDate: this.state.newStartDate, open: false, loading: false, loadingActive: false });
                 this.props.store.dispatch({
                     type: 'UPDATE_START_DATE',

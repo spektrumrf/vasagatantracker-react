@@ -5,7 +5,7 @@ import vasagatanReducer from './vasagatanReducer';
 import { createStore } from 'redux';
 import * as serviceWorker from './serviceWorker';
 
-const store = createStore(vasagatanReducer);
+const store = createStore(vasagatanReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 
 const render = () => {

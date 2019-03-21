@@ -1,14 +1,16 @@
 import React from 'react';
 import Location from './Location';
-import MUIDataTable from 'mui-datatables';
-import localisation from '../localisation';
 import _ from 'lodash';
+import {Grid, Table, TableHeaderRow} from "@devexpress/dx-react-grid-material-ui";
+import { IntegratedSorting, SortingState} from "@devexpress/dx-react-grid";
+import Typography from "../../node_modules/@material-ui/core/Typography/Typography";
+import Paper from "../../node_modules/@material-ui/core/Paper/Paper";
 
 class LocationsList extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            clickedLocationId: null
+            clickedLocationId: null,
         };
     }
 
@@ -17,46 +19,31 @@ class LocationsList extends React.Component{
     };
 
     render() {
+        const state = this.props.store.getState();
+        const TableRow = ({ row, ...restProps }) => (
+            <Table.Row
+                {...restProps}
+                onClick={() => {
+                    const user = state.user;
+                    if (_.get(user, 'type') === 'admin') {
+                        this.setState({ clickedLocationId: row.id });
+                    }
+                }}
+            />
+        );
         const columns = [
-            {
-                name: 'Id',
-                options: {
-                    display: 'excluded',
-                    filter: false,
-                    sort: false
-                }
-            },
-            {
-                name: 'Namn',
-                options: {
-                    filter: false,
-                    sort: false
-                }
-            },
-            {
-                name: 'Prestationer',
-                options: {
-                    filter: false,
-                    sort: true
-                }
-            },
-            {
-                name: 'Poäng',
-                options: {
-                    filter: false,
-                    sort: true
-                }
-            },
-            {
-                name: 'Medeltalspoäng',
-                options: {
-                    filter: false,
-                    sort: true
-                }
-            }];
-        const locationData = _(this.props.store.getState().locations)
+            { name: 'name', title: 'Plats' },
+            { name: 'feats', title: 'Prestationer' },
+            { name: 'points', title: 'Poäng' },
+            { name: 'averagePoints', title: 'Medelpoäng' },
+        ];
+        const columnExtensions = [
+            { columnName: 'name', width: 130, wordWrapEnabled: true },
+            { columnName: 'feats', width: 120 },
+            { columnName: 'points', width: 100 },
+            { columnName: 'averagePoints', width: 130 }];
+        const locationData = _(state.locations)
             .map(location => {
-                const state = this.props.store.getState();
                 const locationFeats = state.feats.reduce((sum, feat) => {
                     if (location.id === feat.location && feat.approved) {
                         return sum + 1;
@@ -73,32 +60,22 @@ class LocationsList extends React.Component{
                     }
                 }, 0);
                 const averageLocationPoints = locationFeats === 0 ? 0 : Math.round((locationPoints / locationFeats) * 100) / 100;
-                return [location.id, location.name, locationFeats, locationPoints, averageLocationPoints];
+                return { id: location.id, name: location.name, feats: locationFeats, points: locationPoints, averagePoints: averageLocationPoints };
             })
             .value();
-        const options = {
-            responsive: 'scroll',
-            pagination: false,
-            selectableRows: false,
-            filter: false,
-            print: false,
-            download: false,
-            onRowClick: (rowData) => {
-                const user = this.props.store.getState().user;
-                if (_.get(user, 'type') === 'admin') {
-                    this.setState({ clickedLocationId: rowData[0] });
-                }
-            },
-            textLabels: localisation
-        };
         return (
-            <div style={{ maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto' }}>
-                <MUIDataTable
-                    title={'Platser'}
-                    data={locationData}
-                    columns={columns}
-                    options={options}
-                />
+            <div style={{ maxWidth: '480px', marginLeft: 'auto', marginRight: 'auto' }}>
+                <Paper>
+                    <Grid rows={locationData} columns={columns}>
+                        <SortingState defaultSorting={[]}/>
+                        <IntegratedSorting />
+                        <Table rowComponent={TableRow} columnExtensions={columnExtensions} />
+                        <TableHeaderRow showSortingControls />
+                        <Typography variant="h6" style={{ paddingTop: '10px', paddingLeft: '20px' }}>
+                            Platser
+                        </Typography>
+                    </Grid>
+                </Paper>
                 <Location store={this.props.store} clickedLocationId={this.state.clickedLocationId} clearClickedLocation={this.clearClickedLocation}/>
             </div>
         );
