@@ -42,7 +42,26 @@ class LoginForm extends React.Component {
             window.localStorage.setItem('loggedFeatappUser', JSON.stringify(user));
 
             await firestore.getAuth().signInWithCustomToken(user.firestoreToken);
-            this.props.realtime();
+
+            const properties = await firestore.getDatabase().get();
+            const activeYearProperties = properties.data();
+            this.props.store.dispatch({
+                type: 'UPDATE_YEAR_PROPERTIES',
+                startDate: activeYearProperties.startDate,
+                realtimeCutoffTime: activeYearProperties.realtimeCutoffTime,
+                finished: activeYearProperties.finished,
+                info: {
+                    what: activeYearProperties.what,
+                    why: activeYearProperties.why,
+                    when: activeYearProperties.when,
+                    where: activeYearProperties.where,
+                    start: activeYearProperties.start,
+                    finish: activeYearProperties.finish,
+                    registration: activeYearProperties.registration,
+                    details: activeYearProperties.details,
+                    important: activeYearProperties.important
+                }
+            });
 
             featService.setToken(user.token);
             userService.setToken(user.token);
@@ -52,9 +71,10 @@ class LoginForm extends React.Component {
             this.setState({ loading: false, loadingActive: false });
 
             this.props.store.dispatch({
-                type: 'LOGIN',
+                type: 'UPDATE_USER',
                 user
             });
+            this.props.realtime();
         } catch (exception) {
             const error = _.get(exception, 'request.data.error');
             this.setState({ loading: false, loadingActive: true, message: error ? error : 'Lösenord eller användarnamn fel, alternativt Act of Ruben' });

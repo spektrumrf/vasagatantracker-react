@@ -116,7 +116,7 @@ class FeatsList extends React.Component {
                 return { id: feat.id, name: user.name, points: `${feat.value} sp`, location: location.name, time: moment.unix(feat.date).format('HH:mm:ss'), status: feat.approved ? 'Godkänd' : 'Inte godkänd', approved: feat.approved };
             });
         if(this.props.filter === 'all') {
-            featData = featData.slice(0,10);
+            featData = featData.filter(feat => feat.approved).slice(0,10);
         }
         const title = this.props.filter === 'all' ? 'Senaste prestationer' : (_.get(user, 'type') === 'admin' ? 'Alla prestationer' : 'Egna prestationer');
         const columnExtensions = [

@@ -36,8 +36,6 @@ const vasagatanReducer = (state = defaultState, action) => {
         return { ...state, users: action.users };
     case 'UPDATE_LOCATIONS':
         return { ...state, locations: action.locations };
-    case 'LOGIN':
-        return { ...state, user: action.user };
     case 'LOGOUT':
         return { ...defaultState, user: null };
     default:

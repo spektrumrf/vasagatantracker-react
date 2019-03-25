@@ -85,12 +85,32 @@ class Year extends React.Component {
                 });
         }
 
-        this.registerRealtimeDataCallbacks();
+        const properties = await firestore.getDatabase().get();
+        const activeYearProperties = properties.data();
+        this.props.store.dispatch({
+            type: 'UPDATE_YEAR_PROPERTIES',
+            startDate: activeYearProperties.startDate,
+            realtimeCutoffTime: activeYearProperties.realtimeCutoffTime,
+            finished: activeYearProperties.finished,
+            info: {
+                what: activeYearProperties.what,
+                why: activeYearProperties.why,
+                when: activeYearProperties.when,
+                where: activeYearProperties.where,
+                start: activeYearProperties.start,
+                finish: activeYearProperties.finish,
+                registration: activeYearProperties.registration,
+                details: activeYearProperties.details,
+                important: activeYearProperties.important
+            }
+        });
 
         this.props.store.dispatch({
             type: 'UPDATE_USER',
-            user: user
+            user
         });
+
+        this.registerRealtimeDataCallbacks();
     };
 
     logout = async () => {
@@ -189,21 +209,48 @@ class Year extends React.Component {
         }, () => {
         });
 
-        let featsUnsub = featsCollection.onSnapshot(snapshot => {
-            const feats = snapshot.docs.map(doc => doc.data());
-            const sortedFeats = feats.sort((f1, f2) => moment.unix(f2.date).diff(moment.unix(f1.date)));
-            const realtimeCutoffTime = this.props.store.getState().realtimeCutoffTime;
-            const user = this.props.store.getState().user;
-            const sortedFilteredFeats = sortedFeats.filter(feat => (feat.date <= realtimeCutoffTime || this.props.store.getState().finished) || (!!user && (feat.user === user.id || _.get(user, 'type') === 'admin')));
-            this.props.store.dispatch({
-                type: 'UPDATE_FEATS',
-                feats: sortedFilteredFeats
+        let featsUnsub = () => {};
+        let ownFeatsUnsub = () => {};
+        const state = this.props.store.getState();
+        if (state.user && (state.user.type === 'admin' || state.finished)) {
+            featsUnsub = featsCollection.onSnapshot(snapshot => {
+                const feats = snapshot.docs.map(doc => doc.data());
+                const sortedFeats = feats.sort((f1, f2) => moment.unix(f2.date).diff(moment.unix(f1.date)));
+                this.props.store.dispatch({
+                    type: 'UPDATE_FEATS',
+                    feats: sortedFeats
+                });
+            }, () => {
             });
-        }, () => {
-        });
+        } else if (state.user) {
+            ownFeatsUnsub = featsCollection.where('user', '==', state.user.id).onSnapshot(async snapshot => {
+                const userFeats = snapshot.docs.map(doc => doc.data());
+                const realtimeFeatsSnap = await featsCollection.where('date', '<', state.realtimeCutoffTime).where('approved', '==', true).get();
+                const realtimeFeats = realtimeFeatsSnap.docs.map(doc => doc.data());
+                const feats = _.unionBy(userFeats, realtimeFeats, 'id');
+                const sortedFeats = feats.sort((f1, f2) => moment.unix(f2.date).diff(moment.unix(f1.date)));
+                this.props.store.dispatch({
+                    type: 'UPDATE_FEATS',
+                    feats: sortedFeats
+                });
+            }, () => {
+            });
+            featsUnsub = featsCollection.where('date', '<', state.realtimeCutoffTime).where('approved', '==', true).onSnapshot(async snapshot => {
+                const realtimeFeats = snapshot.docs.map(doc => doc.data());
+                const userFeatsSnap = await featsCollection.where('user', '==', state.user.id).get();
+                const userFeats = userFeatsSnap.docs.map(doc => doc.data());
+                const feats = _.unionBy(userFeats, realtimeFeats, 'id');
+                const sortedFeats = feats.sort((f1, f2) => moment.unix(f2.date).diff(moment.unix(f1.date)));
+                this.props.store.dispatch({
+                    type: 'UPDATE_FEATS',
+                    feats: sortedFeats
+                });
+            }, () => {
+            });
+        }
 
         this.setState({
-            unsubs: [locationsUnsub, usersUnsub, featsUnsub, activeYearUnsub, activeYearPropertiesUnsub, availableYearsUnsub]
+            unsubs: [locationsUnsub, usersUnsub, featsUnsub, activeYearUnsub, activeYearPropertiesUnsub, availableYearsUnsub, ownFeatsUnsub]
         });
     };
 
