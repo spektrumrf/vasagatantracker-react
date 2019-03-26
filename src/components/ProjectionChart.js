@@ -1,5 +1,5 @@
 import React from 'react';
-import { TimeSeries } from 'pondjs';
+import { TimeSeries, TimeRange } from 'pondjs';
 import { format } from 'd3-format';
 import { Resizable, LineChart, YAxis, Charts, ChartRow, ChartContainer, Legend, styler } from 'react-timeseries-charts';
 import _ from 'lodash';
@@ -48,6 +48,7 @@ class ProjectionChart extends React.Component{
 
     projectionData = () => {
         const state = this.props.store.getState();
+        const startDate = state.startDate;
         const colors = ['red', 'green', 'blue', 'orange', 'purple', 'magenta', 'lime', 'teal', 'brown', 'maroon', 'olive', 'navy', 'grey', 'black'];
         const users = state.users;
         const teams = users.filter(u => u.type === 'team');
@@ -63,7 +64,7 @@ class ProjectionChart extends React.Component{
         const approvedFeats = feats
             .filter(f => {
                 const featUser = _.find(teams, user => user.id === f.user);
-                return f.approved && featUser.type === 'team';
+                return f.approved && featUser.type === 'team' && f.date >= startDate;
             })
             .sort((f1, f2) => moment.unix(f1.date).diff(moment.unix(f2.date)));
 
@@ -134,7 +135,10 @@ class ProjectionChart extends React.Component{
         const columns = this.state.columns;
         const maxProjection = this.state.maxProjection;
         const style = this.state.style;
+
         const series = this.state.series;
+        const duration = (moment(series.range().end()).unix()-moment(series.range().begin()).unix())/60;
+        const range = new TimeRange(moment(series.range().begin()), moment(series.range().end()).add(duration/20, 'minutes'));
 
         const labels = _.map(teams, user => {
             const label = { key: user.id, label: user.username };
@@ -153,7 +157,7 @@ class ProjectionChart extends React.Component{
                         <Resizable>
                             <ChartContainer
                                 titleStyle={{ fill: '#555', fontWeight: 500 }}
-                                timeRange={series.range()}
+                                timeRange={range}
                                 onBackgroundClick={() => this.setState({ selection: null })}
                                 onMouseMove={(x, y) => this.handleMouseMove(x, y)}
                                 timeAxisAngledLabels={true}
@@ -174,7 +178,7 @@ class ProjectionChart extends React.Component{
                                         <LineChart
                                             axis="sp"
                                             breakLine={false}
-                                            interpolation="curveBasis"
+                                            interpolation="curveMonotoneX"
                                             columns={columns.slice(1)}
                                             series={series}
                                             style={style}

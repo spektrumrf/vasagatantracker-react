@@ -98,8 +98,7 @@ class FeatFormDialog extends React.Component{
     processImage = async (image) => {
         const imageCompressor = new ImageCompressor();
         return await imageCompressor.compress(image, {
-            quality: .8,
-            maxWidth: 600
+            quality: 0.8
         });
     };
 

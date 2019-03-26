@@ -28,7 +28,7 @@ class Statistics extends React.Component {
                 <FeatFormDialog store={this.props.store}/>}
                 <Paper square>
                     <Tabs value={this.state.tab} indicatorColor="primary" textColor="primary" onChange={this.handleChange}>
-                        <Tab label="Poängställning"/>
+                        <Tab label="Poäng"/>
                         <Tab label="Drycker"/>
                         <Tab label="Projektion"/>
                     </Tabs>

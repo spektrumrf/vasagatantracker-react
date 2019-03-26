@@ -1,5 +1,5 @@
 import React from 'react';
-import { TimeSeries } from 'pondjs';
+import { TimeSeries, TimeRange } from 'pondjs';
 import { format } from 'd3-format';
 import { Resizable, LineChart, YAxis, Charts, ChartRow, ChartContainer, Legend, styler } from 'react-timeseries-charts';
 import _ from 'lodash';
@@ -35,52 +35,36 @@ class UserChart extends React.Component{
     }
 
     async componentDidMount() {
-        this.initData();
+        this.userChartData();
     }
 
     async componentDidUpdate() {
         const feats = this.props.store.getState().feats;
         const users = this.props.store.getState().users;
         if (feats !== this.state.feats || users !== this.state.users) {
-            this.initData();
+            this.userChartData();
         }
     }
 
-    initData = () => {
+    userChartData = () => {
+        const state = this.props.store.getState();
         const colors = ['red', 'green', 'blue', 'orange', 'purple', 'magenta', 'lime', 'teal', 'brown', 'maroon', 'olive', 'navy', 'grey', 'black'];
-        const users = this.props.store.getState().users;
-        const teamUsers = users.filter(u => u.type === 'team');
-        const feats = this.props.store.getState().feats;
+        const users = state.users;
+        const teams = users.filter(u => u.type === 'team');
+        const feats = state.feats;
 
-        const maxTeamPoints = _(teamUsers)
-            .map(user => {
-                return feats.reduce((sum, feat) => {
-                    if (user.id === feat.user && feat.approved) {
-                        return sum + feat.value;
-                    } else {
-                        return sum;
-                    }
-                }, 0);
-            })
-            .max();
-
-        const columns = _.reduce(teamUsers, (columns, team) => {
+        const columns = _.reduce(teams, (columns, team) => {
             return _.concat(columns, team.id);
         }, ['time']);
 
-        const style = styler(_.map(teamUsers, (user, i) => {
+        const style = styler(_.map(teams, (user, i) => {
             return { key: user.id, color: colors[i] };
         }));
-        this.setState({ maxTeamPoints, users, feats, teamUsers, columns, style });
-    };
-
-    userChartData = () => {
-        const columns = this.state.columns;
-        const teams = this.state.teamUsers;
-        const approvedFeats = this.state.feats
+        const startDate = state.startDate;
+        const approvedFeats = feats
             .filter(f => {
-                const featUser = _.find(this.state.users, user => user.id === f.user);
-                return f.approved && featUser.type === 'team';
+                const featUser = _.find(users, user => user.id === f.user);
+                return f.approved && featUser.type === 'team' && f.date >= startDate;
             })
             .sort((f1, f2) => moment.unix(f1.date).diff(moment.unix(f2.date)));
 
@@ -90,7 +74,7 @@ class UserChart extends React.Component{
 
         const startNode = _.reduce(teams, (startNode) => {
             return _.concat(startNode, 0);
-        }, [this.props.store.getState().startDate*1000]);
+        }, [startDate*1000]);
 
         const teamPoints = _.reduce(teams, (teamPoints, team) => {
             teamPoints[team.id] = 0;
@@ -112,11 +96,16 @@ class UserChart extends React.Component{
             return _.concat(dataArray, [newDataEntry]);
         }, [startNode]);
 
-        return new TimeSeries({
+        let lastDataPoint = _.last(data);
+        let maxTeamPoints = _.max(_.tail(lastDataPoint));
+
+        const series = new TimeSeries({
             name: 'Poäng',
             columns: columns,
             points: data
         });
+        this.setState({ maxTeamPoints, series, users, feats, teams, columns, style });
+
     };
 
     handleTrackerChanged = tracker => {
@@ -132,18 +121,20 @@ class UserChart extends React.Component{
     };
 
     render() {
-        if(!this.state.teamUsers || !this.state.maxTeamPoints || !this.state.columns || !this.state.style){
+        if(!this.state.teams || !this.state.maxTeamPoints || !this.state.columns || !this.state.style || !this.state.series){
             return null;
         }
         const f = format('.1f');
-        const teamUsers = this.state.teamUsers;
+        const teams = this.state.teams;
         const columns = this.state.columns;
         const maxTeamPoints = this.state.maxTeamPoints;
         const style = this.state.style;
 
-        const series = this.userChartData();
+        const series = this.state.series;
+        const duration = (moment(series.range().end()).unix()-moment(series.range().begin()).unix())/60;
+        const range = new TimeRange(moment(series.range().begin()), moment(series.range().end()).add(duration/20, 'minutes'));
 
-        const labels = _.map(teamUsers, user => {
+        const labels = _.map(teams, user => {
             const label = { key: user.id, label: user.username };
             if (this.state.tracker) {
                 const index = series.bisect(this.state.tracker);
@@ -160,7 +151,7 @@ class UserChart extends React.Component{
                         <Resizable>
                             <ChartContainer
                                 titleStyle={{ fill: '#555', fontWeight: 500 }}
-                                timeRange={series.range()}
+                                timeRange={range}
                                 onBackgroundClick={() => this.setState({ selection: null })}
                                 onMouseMove={(x, y) => this.handleMouseMove(x, y)}
                                 timeAxisAngledLabels={true}
@@ -181,7 +172,7 @@ class UserChart extends React.Component{
                                         <LineChart
                                             axis="sp"
                                             breakLine={false}
-                                            interpolation="curveBasis"
+                                            interpolation="curveMonotoneX"
                                             columns={columns.slice(1)}
                                             series={series}
                                             style={style}

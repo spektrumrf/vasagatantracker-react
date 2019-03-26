@@ -8,6 +8,7 @@ import Typography from '../../node_modules/@material-ui/core/Typography/Typograp
 import {
     Grid,
     VirtualTable,
+    Table,
     TableHeaderRow
 } from '@devexpress/dx-react-grid-material-ui';
 import {
