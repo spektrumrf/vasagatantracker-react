@@ -7,7 +7,7 @@ import Paper from '../../node_modules/@material-ui/core/Paper/Paper';
 import Typography from '../../node_modules/@material-ui/core/Typography/Typography';
 import {
     Grid,
-    Table,
+    VirtualTable,
     TableHeaderRow
 } from '@devexpress/dx-react-grid-material-ui';
 import {
@@ -26,6 +26,23 @@ import ListItemText from '../../node_modules/@material-ui/core/ListItemText/List
 import MuiGrid from '../../node_modules/@material-ui/core/Grid/Grid';
 import FilterList from '../../node_modules/@material-ui/icons/FilterList';
 import IconButton from '../../node_modules/@material-ui/core/IconButton/IconButton';
+
+const columns = [
+    { name: 'name', title: 'Lag' },
+    { name: 'points', title: 'Poäng' },
+    { name: 'location', title: 'Plats' },
+    { name: 'time', title: 'Tid' },
+    { name: 'status', title: 'Status' }
+];
+
+const columnExtensions = [
+    { columnName: 'name', width: 130, wordWrapEnabled: true },
+    { columnName: 'location', width: 110, wordWrapEnabled: true },
+    { columnName: 'points', width: 80 },
+    { columnName: 'time', width: 90 },
+    { columnName: 'status', width: 110 }];
+
+const filterPredicate = (value, filter) => _.isEmpty(filter.value) || _.includes(filter.value, value);
 
 class FeatsList extends React.Component {
     constructor(props) {
@@ -91,22 +108,16 @@ class FeatsList extends React.Component {
         this.setState({ filters: newFilters });
     };
 
+    TableRow = ({ row, ...restProps }) => (
+        <Table.Row
+            {...restProps}
+            onClick={() => this.openFeat(row.id)}
+            style={{ backgroundColor: row.approved ? '#d6ffd6' : '#ffcccb' }}
+        />
+    );
+
     render() {
         const state = this.props.store.getState();
-        const columns = [
-            { name: 'name', title: 'Lag' },
-            { name: 'points', title: 'Poäng' },
-            { name: 'location', title: 'Plats' },
-            { name: 'time', title: 'Tid' },
-            { name: 'status', title: 'Status' }
-        ];
-        const TableRow = ({ row, ...restProps }) => (
-            <Table.Row
-                {...restProps}
-                onClick={() => this.openFeat(row.id)}
-                style={{ backgroundColor: row.approved ? '#d6ffd6' : '#ffcccb' }}
-            />
-        );
         const user = state.user;
         let featData = state.feats
             .filter(feat => this.props.filter === 'all' || feat.user === user.id || _.get(user, 'type') === 'admin')
@@ -119,13 +130,6 @@ class FeatsList extends React.Component {
             featData = featData.filter(feat => feat.approved).slice(0,10);
         }
         const title = this.props.filter === 'all' ? 'Senaste prestationer' : (_.get(user, 'type') === 'admin' ? 'Alla prestationer' : 'Egna prestationer');
-        const columnExtensions = [
-            { columnName: 'name', width: 130, wordWrapEnabled: true },
-            { columnName: 'location', width: 110, wordWrapEnabled: true },
-            { columnName: 'points', width: 80 },
-            { columnName: 'time', width: 90 },
-            { columnName: 'status', width: 110 }];
-        const filterPredicate = (value, filter) => _.isEmpty(filter.value) || _.includes(filter.value, value);
         return (
             <div style={{ maxWidth: '540px', marginLeft: 'auto', marginRight: 'auto' }}>
                 <Paper>
@@ -138,7 +142,7 @@ class FeatsList extends React.Component {
                         ]}/>
                         <SortingState defaultSorting={[]}/>
                         <IntegratedSorting />
-                        <Table rowComponent={TableRow} columnExtensions={columnExtensions} />
+                        <VirtualTable rowComponent={this.TableRow} columnExtensions={columnExtensions} />
                         <TableHeaderRow showSortingControls />
                         <div style={{ display: 'flex', paddingTop: '10px', paddingLeft: '20px' }}>
                             <Typography variant="h6">{title}</Typography>
