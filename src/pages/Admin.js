@@ -19,8 +19,10 @@ class Admin extends React.Component {
             chosenYear: this.props.store.getState().chosenYear,
             realtimeCutoffTime: this.props.store.getState().realtimeCutoffTime,
             startDate: this.props.store.getState().startDate,
+            endDate: this.props.store.getState().endDate,
             newRealtimeCutoffTime: this.props.store.getState().realtimeCutoffTime,
             newStartDate: this.props.store.getState().startDate,
+            newEndDate: this.props.store.getState().endDate,
             loading: false,
             loadingActive: false,
             message: ''
@@ -47,6 +49,23 @@ class Admin extends React.Component {
                 this.props.store.dispatch({
                     type: 'UPDATE_START_DATE',
                     startDate: this.state.newStartDate
+                });
+            }
+        } catch (exception) {
+            const error = _.get(exception, 'request.data.error');
+            this.setState({ loading: false, loadingActive: true, message: error ? error : 'Något katastrofalt har inträffat... Får du säkert göra detta?!' });
+        }
+    };
+
+    updateEndDate = async () => {
+        try {
+            if (window.confirm('Är du säker att du vill ändra sluttiden?')) {
+                this.setState({ loading: true, loadingActive: true });
+                await propertiesService.update({ endDate: this.state.newEndDate }, this.state.chosenYear);
+                this.setState({ endDate: this.state.newEndDate, open: false, loading: false, loadingActive: false });
+                this.props.store.dispatch({
+                    type: 'UPDATE_END_DATE',
+                    endDate: this.state.newEndDate
                 });
             }
         } catch (exception) {
@@ -107,7 +126,23 @@ class Admin extends React.Component {
                         <Grid item>
                             <div>
                                 <Typography variant="h6">
-                            Realtime cutoff: {moment.unix(this.state.realtimeCutoffTime).format('DD.MM.YYYY HH:mm:ss')}
+                                Sluttid: {moment.unix(this.state.endDate).format('DD.MM.YYYY HH:mm:ss')}
+                                </Typography>
+                            </div>
+                            <form>
+                                <DateTimePicker
+                                    ampm={false}
+                                    value={moment.unix(this.state.newEndDate)}
+                                    onChange={(date) => this.setState({ newEndDate: date.unix() })}
+                                    label="Ny sluttid"
+                                />
+                            </form>
+                            <Button style={{ marginTop: '10px' }} color="primary" variant="contained" onClick={this.updateEndDate}>Uppdatera sluttid</Button>
+                        </Grid>
+                        <Grid item>
+                            <div>
+                                <Typography variant="h6">
+                                    Realtime cutoff: {moment.unix(this.state.realtimeCutoffTime).format('DD.MM.YYYY HH:mm:ss')}
                                 </Typography>
                             </div>
                             <form>

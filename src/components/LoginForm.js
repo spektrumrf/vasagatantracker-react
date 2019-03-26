@@ -48,6 +48,7 @@ class LoginForm extends React.Component {
             this.props.store.dispatch({
                 type: 'UPDATE_YEAR_PROPERTIES',
                 startDate: activeYearProperties.startDate,
+                endDate: activeYearProperties.endDate,
                 realtimeCutoffTime: activeYearProperties.realtimeCutoffTime,
                 finished: activeYearProperties.finished,
                 info: {

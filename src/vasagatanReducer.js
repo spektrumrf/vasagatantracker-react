@@ -8,6 +8,7 @@ const defaultState = {
     chosenYear: moment().year().toString(),
     activeYear: moment().year().toString(),
     startDate: null,
+    endDate: null,
     realtimeCutoffTime: null,
     info: {},
     finished: false,
@@ -22,10 +23,12 @@ const vasagatanReducer = (state = defaultState, action) => {
         return { ...state, activeYear: action.activeYear };
     case 'UPDATE_START_DATE':
         return { ...state, startDate: action.startDate };
+    case 'UPDATE_END_DATE':
+        return { ...state, endDate: action.endDate };
     case 'UPDATE_CUTOFF_TIME':
         return { ...state, realtimeCutoffTime: action.realtimeCutoffTime };
     case 'UPDATE_YEAR_PROPERTIES':
-        return { ...state, realtimeCutoffTime: action.realtimeCutoffTime, startDate: action.startDate, info: action.info, finished: action.finished };
+        return { ...state, realtimeCutoffTime: action.realtimeCutoffTime, startDate: action.startDate, endDate: action.endDate, info: action.info, finished: action.finished };
     case 'UPDATE_AVAILABLE_YEARS':
         return { ...state, availableYears: action.availableYears };
     case 'UPDATE_USER':

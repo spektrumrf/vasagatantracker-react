@@ -91,6 +91,7 @@ class Year extends React.Component {
             type: 'UPDATE_YEAR_PROPERTIES',
             startDate: activeYearProperties.startDate,
             realtimeCutoffTime: activeYearProperties.realtimeCutoffTime,
+            endDate: activeYearProperties.endDate,
             finished: activeYearProperties.finished,
             info: {
                 what: activeYearProperties.what,
@@ -150,6 +151,7 @@ class Year extends React.Component {
                 this.props.store.dispatch({
                     type: 'UPDATE_YEAR_PROPERTIES',
                     startDate: activeYearProperties.startDate,
+                    endDate: activeYearProperties.endDate,
                     realtimeCutoffTime: activeYearProperties.realtimeCutoffTime,
                     finished: activeYearProperties.finished,
                     info: {
