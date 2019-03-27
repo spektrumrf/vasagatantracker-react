@@ -85,6 +85,11 @@ class Year extends React.Component {
                 });
         }
 
+        this.props.store.dispatch({
+            type: 'UPDATE_USER',
+            user
+        });
+
         const properties = await firestore.getDatabase().get();
         const activeYearProperties = properties.data();
         this.props.store.dispatch({
@@ -104,11 +109,6 @@ class Year extends React.Component {
                 details: activeYearProperties.details,
                 important: activeYearProperties.important
             }
-        });
-
-        this.props.store.dispatch({
-            type: 'UPDATE_USER',
-            user
         });
 
         this.registerRealtimeDataCallbacks();

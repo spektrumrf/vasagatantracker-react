@@ -43,6 +43,11 @@ class LoginForm extends React.Component {
 
             await firestore.getAuth().signInWithCustomToken(user.firestoreToken);
 
+            this.props.store.dispatch({
+                type: 'UPDATE_USER',
+                user
+            });
+
             const properties = await firestore.getDatabase().get();
             const activeYearProperties = properties.data();
             this.props.store.dispatch({
@@ -70,11 +75,6 @@ class LoginForm extends React.Component {
             propertiesService.setToken(user.token);
 
             this.setState({ loading: false, loadingActive: false });
-
-            this.props.store.dispatch({
-                type: 'UPDATE_USER',
-                user
-            });
             this.props.realtime();
         } catch (exception) {
             const error = _.get(exception, 'request.data.error');
