@@ -367,12 +367,13 @@ class Year extends React.Component {
                                         VasagatanTracker {this.props.year}
                                     </Typography>
                                 </div>
+                                {state.user &&
                                 <div style={{ marginLeft: 'auto' }}>
                                     <IconButton style={styles.chatButton} color="inherit" aria-label="Chat"
                                         onClick={this.setChatDrawer(true)}>
                                         <ChatIcon/>
                                     </IconButton>
-                                </div>
+                                </div>}
                             </Toolbar>
                         </AppBar>
                     </div>
@@ -387,7 +388,8 @@ class Year extends React.Component {
                             {menuList}
                         </div>
                     </SwipeableDrawer>
-                    <SwipeableDrawer style={{ maxWidth: '100px' }} anchor="right" open={this.state.chatDrawerOpen} onOpen={this.setChatDrawer(true)}
+                    {state.user &&
+                    <SwipeableDrawer anchor="right" open={this.state.chatDrawerOpen} onOpen={this.setChatDrawer(true)}
                         onClose={this.setChatDrawer(false)}>
                         <div
                             tabIndex={0}
@@ -395,8 +397,7 @@ class Year extends React.Component {
                         >
                             <Chat store={this.props.store}/>
                         </div>
-                    </SwipeableDrawer>
-
+                    </SwipeableDrawer>}
                     <div>
                         <Route exact path='/year/:year' render={() =>
                             <AsyncHome store={this.props.store}/>

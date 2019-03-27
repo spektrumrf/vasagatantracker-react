@@ -33,7 +33,7 @@ class Chat extends React.Component {
     render() {
         const comments = this.props.store.getState().comments;
         return(
-            <div style={{ maxWidth: '300px', margin: '10px', padding: '10px', overflow: 'auto' }}>
+            <div style={{ maxWidth: '200px', margin: '10px', padding: '10px' }}>
                 <Typography variant="h6" color="secondary">Shitty Chat</Typography>
                 <form noValidate autoComplete="off">
                     <TextField
