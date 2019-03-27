@@ -104,6 +104,7 @@ class Admin extends React.Component {
                     <div style={{ paddingBottom: '30px' }}>
                         <LocationFormDialog store={this.props.store}/>
                     </div>
+                    <Loading active={this.state.loadingActive} loading={this.state.loading} message={this.state.message}/>
                     <Grid container spacing={24} style={{ padding: '10px' }}>
                         <Grid item>
                             <div>
@@ -156,7 +157,6 @@ class Admin extends React.Component {
                             <Button style={{ marginTop: '10px' }} color="primary" variant="contained" onClick={this.updateRealtimeCutoffTime}>Uppdatera realtime cutoff</Button>
                         </Grid>
                     </Grid>
-                    <Loading active={this.state.loadingActive} loading={this.state.loading} message={this.state.message}/>
                 </div>
             </MuiPickersUtilsProvider>
         );
