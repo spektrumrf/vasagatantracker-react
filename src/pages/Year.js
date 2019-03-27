@@ -15,7 +15,9 @@ import IconButton from '@material-ui/core/IconButton';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Menu from '@material-ui/icons/Menu';
+import ChatIcon from '@material-ui/icons/Chat';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Chat from '../components/Chat';
 import moment from 'moment';
 import _ from 'lodash';
 import Loadable from 'react-loadable';
@@ -35,7 +37,8 @@ class Year extends React.Component {
         super(props);
         this.state = {
             unsubs: [],
-            drawerOpen: false
+            drawerOpen: false,
+            chatDrawerOpen: false
         };
     }
 
@@ -128,6 +131,7 @@ class Year extends React.Component {
         const locationsCollection = firestore.getCollection('locations');
         const usersCollection = firestore.getCollection('users');
         const featsCollection = firestore.getCollection('feats');
+        const commentsCollection = firestore.getCollection('comments');
         const activeYearDoc = firestore.getProperties().doc('activeYear');
         const activeYearPropertiesDoc = firestore.getDatabase();
         const availableYearsCollection = firestore.getYears();
@@ -251,13 +255,28 @@ class Year extends React.Component {
             });
         }
 
+        let commentsUnsub = commentsCollection.onSnapshot( async snapshot => {
+            const comments = snapshot.docs.map(doc => doc.data());
+            const sortedComments = comments.sort((f1, f2) => moment.unix(f2.date).diff(moment.unix(f1.date)));
+            this.props.store.dispatch({
+                type: 'UPDATE_COMMENTS',
+                comments: sortedComments
+            });
+        }, () => {
+
+        });
+
         this.setState({
-            unsubs: [locationsUnsub, usersUnsub, featsUnsub, activeYearUnsub, activeYearPropertiesUnsub, availableYearsUnsub, ownFeatsUnsub]
+            unsubs: [locationsUnsub, usersUnsub, featsUnsub, activeYearUnsub, activeYearPropertiesUnsub, availableYearsUnsub, ownFeatsUnsub, commentsUnsub]
         });
     };
 
-    toggleDrawer = (open) => () => {
+    setDrawer = (open) => () => {
         this.setState({ drawerOpen: open });
+    };
+
+    setChatDrawer = (open) => () => {
+        this.setState({ chatDrawerOpen: open });
     };
 
     render() {
@@ -327,6 +346,9 @@ class Year extends React.Component {
                 marginLeft: -12,
                 marginRight: 20,
             },
+            chatButton: {
+                marginRight: -10,
+            },
         };
         return (
             <Router>
@@ -336,7 +358,7 @@ class Year extends React.Component {
                             <Toolbar style={{ display: 'flex', alignItems: 'center' }} variant="dense">
                                 <div>
                                     <IconButton style={styles.menuButton} color="inherit" aria-label="Menu"
-                                        onClick={this.toggleDrawer(true)}>
+                                        onClick={this.setDrawer(true)}>
                                         <Menu/>
                                     </IconButton>
                                 </div>
@@ -345,18 +367,33 @@ class Year extends React.Component {
                                         VasagatanTracker {this.props.year}
                                     </Typography>
                                 </div>
+                                <div style={{ marginLeft: 'auto' }}>
+                                    <IconButton style={styles.chatButton} color="inherit" aria-label="Chat"
+                                        onClick={this.setChatDrawer(true)}>
+                                        <ChatIcon/>
+                                    </IconButton>
+                                </div>
                             </Toolbar>
                         </AppBar>
                     </div>
-                    <SwipeableDrawer open={this.state.drawerOpen} onOpen={this.toggleDrawer(true)}
-                        onClose={this.toggleDrawer(false)}>
+                    <SwipeableDrawer open={this.state.drawerOpen} onOpen={this.setDrawer(true)}
+                        onClose={this.setDrawer(false)}>
                         <div
                             tabIndex={0}
                             role="button"
-                            onClick={this.toggleDrawer(false)}
-                            onKeyDown={this.toggleDrawer(false)}
+                            onClick={this.setDrawer(false)}
+                            onKeyDown={this.setDrawer(false)}
                         >
                             {menuList}
+                        </div>
+                    </SwipeableDrawer>
+                    <SwipeableDrawer style={{ maxWidth: '100px' }} anchor="right" open={this.state.chatDrawerOpen} onOpen={this.setChatDrawer(true)}
+                        onClose={this.setChatDrawer(false)}>
+                        <div
+                            tabIndex={0}
+                            role="button"
+                        >
+                            <Chat store={this.props.store}/>
                         </div>
                     </SwipeableDrawer>
 

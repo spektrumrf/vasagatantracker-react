@@ -5,6 +5,7 @@ const defaultState = {
     users: [],
     user: null,
     locations: [],
+    comments: [],
     chosenYear: moment().year().toString(),
     activeYear: moment().year().toString(),
     startDate: null,
@@ -39,6 +40,8 @@ const vasagatanReducer = (state = defaultState, action) => {
         return { ...state, users: action.users };
     case 'UPDATE_LOCATIONS':
         return { ...state, locations: action.locations };
+    case 'UPDATE_COMMENTS':
+        return { ...state, comments: action.comments };
     case 'LOGOUT':
         return { ...defaultState, user: null };
     default:

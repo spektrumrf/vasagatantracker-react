@@ -108,7 +108,7 @@ class LoginForm extends React.Component {
                             />
                         </FormControl>
                         <Loading active={this.state.loadingActive} loading={this.state.loading} message={this.state.message}/>
-                        <Button style={{ marginTop: '20px' }} variant="contained" color="secondary" onClick={this.login}>Logga in</Button>
+                        <Button type="submit" style={{ marginTop: '20px' }} variant="contained" color="secondary" onClick={this.login}>Logga in</Button>
                     </form>
                 </Paper>
             </div>
