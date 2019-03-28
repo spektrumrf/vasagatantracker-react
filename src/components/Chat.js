@@ -47,7 +47,7 @@ class Chat extends React.Component {
                         />
                     </div>
                     <div>
-                        <Button type="submit" variant="outlined" color="primary" onClick={this.sendMessage}>Skicka</Button>
+                        <Button variant="outlined" color="primary" onClick={this.sendMessage}>Skicka</Button>
                     </div>
                 </form>
                 <div style={{ marginTop: '15px' }}>
