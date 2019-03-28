@@ -36,16 +36,20 @@ class Chat extends React.Component {
             <div style={{ maxWidth: '200px', margin: '10px', padding: '10px' }}>
                 <Typography variant="h6" color="secondary">Shitty Chat</Typography>
                 <form noValidate autoComplete="off">
-                    <TextField
-                        label="Meddelande"
-                        value={this.state.message}
-                        onChange={(event) => { this.setState({ message: event.target.value }); }}
-                        margin="normal"
-                        variant="outlined"
-                        color="primary"
-                    />
+                    <div>
+                        <TextField
+                            label="Meddelande"
+                            value={this.state.message}
+                            onChange={(event) => { this.setState({ message: event.target.value }); }}
+                            margin="normal"
+                            variant="outlined"
+                            color="primary"
+                        />
+                    </div>
+                    <div>
+                        <Button type="submit" variant="outlined" color="primary" onClick={this.sendMessage}>Skicka</Button>
+                    </div>
                 </form>
-                <Button variant="outlined" color="primary" onClick={this.sendMessage}>Skicka</Button>
                 <div style={{ marginTop: '15px' }}>
                     {_.map(comments, comment =>
                         <div key={comment.id}>

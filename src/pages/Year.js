@@ -283,7 +283,7 @@ class Year extends React.Component {
         const state = this.props.store.getState();
 
         const menuList = (
-            <div>
+            <div style={{ maxWidth: '200px' }}>
                 <List component="nav">
                     <ListItem button component={Link} to={`/year/${this.props.year}`} data-next={true}>
                         <ListItemText primary="Hemsida"/>

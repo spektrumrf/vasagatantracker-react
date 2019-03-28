@@ -36,7 +36,7 @@ class UsersList extends React.Component{
             { name: 'pointsCoefficient', title: 'Poäng med koefficient' },
         ];
         const columnExtensions = [
-            { columnName: 'name', width: 130, wordWrapEnabled: true },
+            { columnName: 'name', width: 150, wordWrapEnabled: true },
             { columnName: 'points', width: 100 },
             { columnName: 'pointsCoefficient', width: 180 }];
         const userData = _(this.props.store.getState().users)
@@ -54,7 +54,7 @@ class UsersList extends React.Component{
             })
             .value();
         return (
-            <div style={{ maxWidth: '410px', marginLeft: 'auto', marginRight: 'auto' }}>
+            <div style={{ maxWidth: '430px', marginLeft: 'auto', marginRight: 'auto' }}>
                 <Paper>
                     <Grid rows={userData} columns={columns}>
                         <SortingState defaultSorting={[]}/>

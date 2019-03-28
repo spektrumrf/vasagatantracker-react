@@ -37,7 +37,7 @@ const columns = [
 ];
 
 const columnExtensions = [
-    { columnName: 'name', width: 130, wordWrapEnabled: true },
+    { columnName: 'name', width: 150, wordWrapEnabled: true },
     { columnName: 'location', width: 110, wordWrapEnabled: true },
     { columnName: 'points', width: 80 },
     { columnName: 'time', width: 90 },
@@ -132,7 +132,7 @@ class FeatsList extends React.Component {
         }
         const title = this.props.filter === 'all' ? 'Senaste prestationer' : (_.get(user, 'type') === 'admin' ? 'Alla prestationer' : 'Egna prestationer');
         return (
-            <div style={{ maxWidth: '540px', marginLeft: 'auto', marginRight: 'auto' }}>
+            <div style={{ maxWidth: '560px', marginLeft: 'auto', marginRight: 'auto' }}>
                 <Paper>
                     <Grid rows={featData} columns={columns}>
                         <FilteringState filters={this.state.filters} />
