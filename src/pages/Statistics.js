@@ -2,11 +2,11 @@ import React from 'react';
 import UserChart from '../components/UserChart';
 import DrinkChart from '../components/DrinkChart';
 import FeatFormDialog from '../components/FeatFormDialog';
-import Paper from "../../node_modules/@material-ui/core/Paper/Paper";
-import Tabs from "../../node_modules/@material-ui/core/Tabs/Tabs";
-import Tab from "../../node_modules/@material-ui/core/Tab/Tab";
-import _ from "lodash";
-import ProjectionChart from "../components/ProjectionChart";
+import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import _ from 'lodash';
+import ProjectionChart from '../components/ProjectionChart';
 
 class Statistics extends React.Component {
     constructor(props) {
@@ -39,6 +39,6 @@ class Statistics extends React.Component {
             </div>
         );
     }
-};
+}
 
 export default Statistics;

@@ -1,14 +1,14 @@
 import React from 'react';
-import { MuiPickersUtilsProvider } from 'material-ui-pickers';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import propertiesService from '../services/properties';
 import UserFormDialog from '../components/UserFormDialog';
 import LocationFormDialog from '../components/LocationFormDialog';
-import Typography from '../../node_modules/@material-ui/core/Typography/Typography';
-import Button from '../../node_modules/@material-ui/core/Button/Button';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import { DateTimePicker } from 'material-ui-pickers';
 import MomentUtils from '@date-io/moment';
 import moment from 'moment';
-import Grid from '../../node_modules/@material-ui/core/Grid/Grid';
+import Grid from '@material-ui/core/Grid';
 import _ from 'lodash';
 import Loading from '../components/Loading';
 

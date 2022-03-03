@@ -3,14 +3,14 @@ import userService from '../services/users';
 import Dialog from '@material-ui/core/Dialog';
 import Divider from '@material-ui/core/Divider';
 import _ from 'lodash';
-import DialogActions from '../../node_modules/@material-ui/core/DialogActions/DialogActions';
-import DialogContent from '../../node_modules/@material-ui/core/DialogContent/DialogContent';
-import List from '../../node_modules/@material-ui/core/List/List';
-import ListItem from '../../node_modules/@material-ui/core/ListItem/ListItem';
-import ListItemText from '../../node_modules/@material-ui/core/ListItemText/ListItemText';
-import Button from '../../node_modules/@material-ui/core/Button/Button';
-import Slide from '../../node_modules/@material-ui/core/Slide/Slide';
-import Typography from '../../node_modules/@material-ui/core/Typography/Typography';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Button from '@material-ui/core/Button';
+import Slide from '@material-ui/core/Slide';
+import Typography from '@material-ui/core/Typography';
 import Loading from './Loading';
 
 class User extends React.Component {

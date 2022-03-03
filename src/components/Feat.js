@@ -5,16 +5,16 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import featService from '../services/feats';
-import CircularProgress from '../../node_modules/@material-ui/core/CircularProgress/CircularProgress';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import _ from 'lodash';
-import ListItem from '../../node_modules/@material-ui/core/ListItem/ListItem';
-import List from '../../node_modules/@material-ui/core/List/List';
-import ListItemText from '../../node_modules/@material-ui/core/ListItemText/ListItemText';
-import Button from '../../node_modules/@material-ui/core/Button/Button';
+import ListItem from '@material-ui/core/ListItem';
+import List from '@material-ui/core/List';
+import ListItemText from '@material-ui/core/ListItemText';
+import Button from '@material-ui/core/Button';
 import moment from 'moment';
-import Typography from '../../node_modules/@material-ui/core/Typography/Typography';
+import Typography from '@material-ui/core/Typography';
 import FeatEditFormDialog from './FeatEditFormDialog';
-import Slide from '../../node_modules/@material-ui/core/Slide/Slide';
+import Slide from '@material-ui/core/Slide';
 import Loading from './Loading';
 
 class Feat extends React.Component {

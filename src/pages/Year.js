@@ -1,5 +1,5 @@
-import React from 'react';
-import { HashRouter as Router, Link, Route, Redirect } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, Routes, Route, useParams, useLocation, Navigate } from 'react-router-dom';
 import firestore from '../firestore';
 import featService from '../services/feats';
 import userService from '../services/users';
@@ -14,8 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Menu from '@material-ui/icons/Menu';
-import ChatIcon from '@material-ui/icons/Chat';
+/* import Menu from '@material-ui/icons/Menu';
+import ChatIcon from '@material-ui/icons/Chat'; */
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Chat from '../components/Chat';
 import moment from 'moment';
@@ -32,39 +32,29 @@ const AsyncLocations = Loadable({ loader: () => import('./Locations'), loading: 
 const AsyncAdmin = Loadable({ loader: () => import('./Admin'), loading: Loading });
 const AsyncLogin = Loadable({ loader: () => import('./Login'), loading: Loading });
 
-class Year extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            unsubs: [],
-            drawerOpen: false,
-            chatDrawerOpen: false
-        };
-    }
+function Year(props) {
+    const state = props.store.getState();
 
-    async componentDidUpdate(prevProps) {
-        if (this.props.year !== prevProps.year) {
-            await this.logout();
-            this.props.store.dispatch({ type: 'UPDATE_CHOSEN_YEAR', chosenYear: this.props.year });
-            await this.initData();
-        }
-    }
+    const [unsubs, setUnsubs] = useState([]);
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [chatDrawerOpen, setChatDrawerOpen] = useState(false);
+    const { year }= useParams();
+    const location = useLocation();
 
-    async componentDidMount() {
+    useEffect(async () => {
         window.Chart = require('chart.js');
-        this.props.store.dispatch({ type: 'UPDATE_CHOSEN_YEAR', chosenYear: this.props.year });
-        await this.initData();
-    }
+        props.store.dispatch({ type: 'UPDATE_CHOSEN_YEAR', chosenYear: year });
+        await initData();
+        return async function cleanup() {
+            unsubs.forEach(unsub => unsub());
+            await firestore.getAuth().signOut();
+        };
+    }, [year]);
 
-    async componentWillUnmount() {
-        this.state.unsubs.forEach(unsub => unsub());
-        await firestore.getAuth().signOut();
-    }
+    async function initData() {
+        const state = props.store.getState();
 
-    initData = async () => {
-        const state = this.props.store.getState();
-
-        this.state.unsubs.forEach(unsub => unsub());
+        unsubs.forEach(unsub => unsub());
         firestore.setAppYear(state.chosenYear);
 
         const loggedUserJSON = window.localStorage.getItem('loggedFeatappUser');
@@ -88,14 +78,15 @@ class Year extends React.Component {
                 });
         }
 
-        this.props.store.dispatch({
+        props.store.dispatch({
             type: 'UPDATE_USER',
             user
         });
 
         const properties = await firestore.getDatabase().get();
         const activeYearProperties = properties.data();
-        this.props.store.dispatch({
+        console.log(activeYearProperties);
+        props.store.dispatch({
             type: 'UPDATE_YEAR_PROPERTIES',
             startDate: activeYearProperties.startDate,
             realtimeCutoffTime: activeYearProperties.realtimeCutoffTime,
@@ -114,20 +105,20 @@ class Year extends React.Component {
             }
         });
 
-        this.registerRealtimeDataCallbacks();
-    };
+        registerRealtimeDataCallbacks();
+    }
 
-    logout = async () => {
+    async function logout() {
         await firestore.getAuth().signOut();
         window.localStorage.removeItem('loggedFeatappUser');
-        this.props.store.dispatch({
+        props.store.dispatch({
             type: 'LOGOUT'
         });
-        this.props.store.dispatch({ type: 'UPDATE_CHOSEN_YEAR', chosenYear: this.props.year });
-        await this.initData();
-    };
+        props.store.dispatch({ type: 'UPDATE_CHOSEN_YEAR', chosenYear: props.year });
+        await initData();
+    }
 
-    registerRealtimeDataCallbacks = () => {
+    function registerRealtimeDataCallbacks() {
         const locationsCollection = firestore.getCollection('locations');
         const usersCollection = firestore.getCollection('users');
         const featsCollection = firestore.getCollection('feats');
@@ -140,7 +131,7 @@ class Year extends React.Component {
             const data = snapshot.data();
             if (data) {
                 const activeYear = data.activeYear.toString();
-                this.props.store.dispatch({
+                props.store.dispatch({
                     type: 'UPDATE_ACTIVE_YEAR',
                     activeYear
                 });
@@ -152,7 +143,7 @@ class Year extends React.Component {
             const data = snapshot.data();
             if (data) {
                 const activeYearProperties = data;
-                this.props.store.dispatch({
+                props.store.dispatch({
                     type: 'UPDATE_YEAR_PROPERTIES',
                     startDate: activeYearProperties.startDate,
                     endDate: activeYearProperties.endDate,
@@ -181,7 +172,7 @@ class Year extends React.Component {
                     .map(year => year.year)
                     .reverse()
                     .value();
-                this.props.store.dispatch({
+                props.store.dispatch({
                     type: 'UPDATE_AVAILABLE_YEARS',
                     availableYears
                 });
@@ -198,7 +189,7 @@ class Year extends React.Component {
                 if (name2 < name1) return 1;
                 return 0;
             });
-            this.props.store.dispatch({
+            props.store.dispatch({
                 type: 'UPDATE_LOCATIONS',
                 locations: sortedLocations
             });
@@ -208,7 +199,7 @@ class Year extends React.Component {
         let usersUnsub = usersCollection.onSnapshot(snapshot => {
             const users = snapshot.docs.map(doc => doc.data());
             const sortedUsers = users.sort((u1, u2) => u2.points - u1.points);
-            this.props.store.dispatch({
+            props.store.dispatch({
                 type: 'UPDATE_USERS',
                 users: sortedUsers
             });
@@ -217,12 +208,12 @@ class Year extends React.Component {
 
         let featsUnsub = () => {};
         let ownFeatsUnsub = () => {};
-        const state = this.props.store.getState();
+        const state = props.store.getState();
         if (state.user && (state.user.type === 'admin' || state.finished)) {
             featsUnsub = featsCollection.onSnapshot(snapshot => {
                 const feats = snapshot.docs.map(doc => doc.data());
                 const sortedFeats = feats.sort((f1, f2) => moment.unix(f2.date).diff(moment.unix(f1.date)));
-                this.props.store.dispatch({
+                props.store.dispatch({
                     type: 'UPDATE_FEATS',
                     feats: sortedFeats
                 });
@@ -235,7 +226,7 @@ class Year extends React.Component {
                 const realtimeFeats = realtimeFeatsSnap.docs.map(doc => doc.data());
                 const feats = _.unionBy(userFeats, realtimeFeats, 'id');
                 const sortedFeats = feats.sort((f1, f2) => moment.unix(f2.date).diff(moment.unix(f1.date)));
-                this.props.store.dispatch({
+                props.store.dispatch({
                     type: 'UPDATE_FEATS',
                     feats: sortedFeats
                 });
@@ -247,7 +238,7 @@ class Year extends React.Component {
                 const userFeats = userFeatsSnap.docs.map(doc => doc.data());
                 const feats = _.unionBy(userFeats, realtimeFeats, 'id');
                 const sortedFeats = feats.sort((f1, f2) => moment.unix(f2.date).diff(moment.unix(f1.date)));
-                this.props.store.dispatch({
+                props.store.dispatch({
                     type: 'UPDATE_FEATS',
                     feats: sortedFeats
                 });
@@ -258,7 +249,7 @@ class Year extends React.Component {
         let commentsUnsub = commentsCollection.onSnapshot( async snapshot => {
             const comments = snapshot.docs.map(doc => doc.data());
             const sortedComments = comments.sort((f1, f2) => moment.unix(f2.date).diff(moment.unix(f1.date)));
-            this.props.store.dispatch({
+            props.store.dispatch({
                 type: 'UPDATE_COMMENTS',
                 comments: sortedComments
             });
@@ -266,198 +257,157 @@ class Year extends React.Component {
 
         });
 
-        this.setState({
-            unsubs: [locationsUnsub, usersUnsub, featsUnsub, activeYearUnsub, activeYearPropertiesUnsub, availableYearsUnsub, ownFeatsUnsub, commentsUnsub]
-        });
+        setUnsubs([locationsUnsub, usersUnsub, featsUnsub, activeYearUnsub, activeYearPropertiesUnsub, availableYearsUnsub, ownFeatsUnsub, commentsUnsub]);
+    }
+
+    const setDrawer = (open) => () => {
+        setDrawerOpen(open);
     };
 
-    setDrawer = (open) => () => {
-        this.setState({ drawerOpen: open });
+    const setChatDrawer = (open) => () => {
+        setChatDrawerOpen(open);
     };
 
-    setChatDrawer = (open) => () => {
-        this.setState({ chatDrawerOpen: open });
-    };
-
-    render() {
-        const state = this.props.store.getState();
-
-        const menuList = (
-            <div style={{ maxWidth: '200px' }}>
-                <List component="nav">
-                    <ListItem button component={Link} to={`/year/${this.props.year}`} data-next={true}>
-                        <ListItemText primary="Hemsida"/>
-                    </ListItem>
-                    {state.user &&
-                    <ListItem button component={Link} to={`/year/${this.props.year}/recentfeats`} data-next={true}>
+    const menuList = (
+        <div style={{ maxWidth: '200px' }}>
+            <List component="nav">
+                <ListItem button component={Link} to={`/year/${year}`} data-next={true}>
+                    <ListItemText primary="Hemsida"/>
+                </ListItem>
+                {state.user &&
+                    <ListItem button component={Link} to={`/year/${year}/recentfeats`} data-next={true}>
                         <ListItemText primary="Senaste prestationer"/>
                     </ListItem>}
-                    {state.user &&
-                    <ListItem button component={Link} to={`/year/${this.props.year}/feats`} data-next={true}>
+                {state.user &&
+                    <ListItem button component={Link} to={`/year/${year}/feats`} data-next={true}>
                         <ListItemText primary={state.user.type === 'team' ? 'Egna prestationer' : 'Alla prestationer'}/>
                     </ListItem>}
-                    {state.user &&
-                    <ListItem button component={Link} to={`/year/${this.props.year}/users`} data-next={true}>
+                {state.user &&
+                    <ListItem button component={Link} to={`/year/${year}/users`} data-next={true}>
                         <ListItemText primary="Lag"/>
                     </ListItem>}
-                    {state.user &&
-                    <ListItem button component={Link} to={`/year/${this.props.year}/locations`} data-next={true}>
+                {state.user &&
+                    <ListItem button component={Link} to={`/year/${year}/locations`} data-next={true}>
                         <ListItemText primary="Platser"/>
                     </ListItem>}
-                    {state.user &&
-                    <ListItem button component={Link} to={`/year/${this.props.year}/statistics`} data-next={true}>
+                {state.user &&
+                    <ListItem button component={Link} to={`/year/${year}/statistics`} data-next={true}>
                         <ListItemText primary="Statistik"/>
                     </ListItem>}
-                    {state.user && state.user.type === 'admin' &&
-                    <ListItem button component={Link} to={`/year/${this.props.year}/admin`} data-next={true}>
+                {state.user && state.user.type === 'admin' &&
+                    <ListItem button component={Link} to={`/year/${year}/admin`} data-next={true}>
                         <ListItemText primary="Admin"/>
                     </ListItem>}
-                </List>
-                <Divider/>
-                <List>
-                    {state.user ?
-                        <ListItem button component={Link} to={`/year/${this.props.year}`} data-next={true}
-                            onClick={this.logout}>
-                            <ListItemText primary={`Logga ut som ${state.user.name}`}/>
-                        </ListItem> :
-                        <ListItem button component={Link} to={`/year/${this.props.year}/login`} data-next={true}>
-                            <ListItemText primary="Logga in"/>
-                        </ListItem>}
-                </List>
-                <Divider/>
-                <List>
-                    {_.map(state.availableYears, year =>
-                        <ListItem key={year} button component={Link} to={`/year/${year}`} data-next={true}>
-                            <ListItemText primary={year}/>
-                        </ListItem>)
-                    }
-                </List>
-            </div>
-        );
-        const styles = {
-            root: {
-                textAlign: 'center',
-                marginBottom: '75px'
-            },
-            grow: {
-                flexGrow: 1
-            },
-            menuButton: {
-                marginLeft: -12,
-                marginRight: 20,
-            },
-            chatButton: {
-                marginRight: -10,
-            },
-        };
-        return (
-            <Router>
-                <div style={{ marginLeft: '20px', marginRight: '20px', marginBottom: '100px' }}>
-                    <div style={styles.root}>
-                        <AppBar position="fixed">
-                            <Toolbar style={{ display: 'flex', alignItems: 'center' }} variant="dense">
-                                <div>
-                                    <IconButton style={styles.menuButton} color="inherit" aria-label="Menu"
-                                        onClick={this.setDrawer(true)}>
-                                        <Menu/>
-                                    </IconButton>
-                                </div>
-                                <div>
-                                    <Typography variant="h6" color="inherit" style={styles.grow}>
-                                        VasagatanTracker {this.props.year}
-                                    </Typography>
-                                </div>
-                                {state.user &&
+            </List>
+            <Divider/>
+            <List>
+                {state.user ?
+                    <ListItem button component={Link} to={`/year/${year}`} data-next={true}
+                        onClick={logout}>
+                        <ListItemText primary={`Logga ut som ${state.user.name}`}/>
+                    </ListItem> :
+                    <ListItem button component={Link} to={`/year/${year}/login`} data-next={true}>
+                        <ListItemText primary="Logga in"/>
+                    </ListItem>}
+            </List>
+            <Divider/>
+            <List>
+                {_.map(state.availableYears, year =>
+                    <ListItem key={year} button component={Link} to={`/year/${year}`} data-next={true}>
+                        <ListItemText primary={year}/>
+                    </ListItem>)
+                }
+            </List>
+        </div>
+    );
+    const styles = {
+        root: {
+            textAlign: 'center',
+            marginBottom: '75px'
+        },
+        grow: {
+            flexGrow: 1
+        },
+        menuButton: {
+            marginLeft: -12,
+            marginRight: 20,
+        },
+        chatButton: {
+            marginRight: -10,
+        },
+    };
+    return (
+        <div style={{ marginLeft: '20px', marginRight: '20px', marginBottom: '100px' }}>
+            <div style={styles.root}>
+                <AppBar position="fixed">
+                    <Toolbar style={{ display: 'flex', alignItems: 'center' }} variant="dense">
+                        <div>
+                            <IconButton style={styles.menuButton} color="inherit" aria-label="Menu"
+                                onClick={setDrawer(true)}>
+                                {/* <Menu/> */}
+                            </IconButton>
+                        </div>
+                        <div>
+                            <Typography variant="h6" color="inherit" style={styles.grow}>
+                                        VasagatanTracker {props.year}
+                            </Typography>
+                        </div>
+                        {state.user &&
                                 <div style={{ marginLeft: 'auto' }}>
                                     <IconButton style={styles.chatButton} color="inherit" aria-label="Chat"
-                                        onClick={this.setChatDrawer(true)}>
-                                        <ChatIcon/>
+                                        onClick={setChatDrawer(true)}>
+                                        {/* <ChatIcon/> */}
                                     </IconButton>
                                 </div>}
-                            </Toolbar>
-                        </AppBar>
-                    </div>
-                    <SwipeableDrawer open={this.state.drawerOpen} onOpen={this.setDrawer(true)}
-                        onClose={this.setDrawer(false)}>
+                    </Toolbar>
+                </AppBar>
+            </div>
+            <SwipeableDrawer open={drawerOpen} onOpen={setDrawer(true)}
+                onClose={setDrawer(false)}>
+                <div
+                    tabIndex={0}
+                    role="button"
+                    onClick={setDrawer(false)}
+                    onKeyDown={setDrawer(false)}
+                >
+                    {menuList}
+                </div>
+            </SwipeableDrawer>
+            {state.user &&
+                    <SwipeableDrawer anchor="right" open={chatDrawerOpen} onOpen={setChatDrawer(true)}
+                        onClose={setChatDrawer(false)}>
                         <div
                             tabIndex={0}
                             role="button"
-                            onClick={this.setDrawer(false)}
-                            onKeyDown={this.setDrawer(false)}
                         >
-                            {menuList}
-                        </div>
-                    </SwipeableDrawer>
-                    {state.user &&
-                    <SwipeableDrawer anchor="right" open={this.state.chatDrawerOpen} onOpen={this.setChatDrawer(true)}
-                        onClose={this.setChatDrawer(false)}>
-                        <div
-                            tabIndex={0}
-                            role="button"
-                        >
-                            <Chat store={this.props.store}/>
+                            <Chat store={props.store}/>
                         </div>
                     </SwipeableDrawer>}
-                    <div>
-                        <Route exact path='/year/:year' render={() =>
-                            <AsyncHome store={this.props.store}/>
-                        }/>
-                        <Route exact path='/year/:year/recentfeats' render={({ match }) => {
-                            if (state.user) {
-                                return <AsyncRecentFeats store={this.props.store}/>;
-                            } else {
-                                return <Redirect to={`/year/${match.params.year}/login`}/>;
-                            }
-                        }}/>
-                        <Route exact path='/year/:year/feats' render={({ match }) => {
-                            if (state.user) {
-                                return <AsyncFeats store={this.props.store}/>;
-                            } else {
-                                return <Redirect to={`/year/${match.params.year}/login`}/>;
-                            }
-                        }}/>
-                        <Route exact path='/year/:year/users' render={({ match }) => {
-                            if (state.user) {
-                                return <AsyncUsers store={this.props.store}/>;
-                            } else {
-                                return <Redirect to={`/year/${match.params.year}/login`}/>;
-                            }
-                        }}/>
-                        <Route exact path='/year/:year/statistics' render={({ match }) => {
-                            if (state.user) {
-                                return <AsyncStatistics store={this.props.store}/>;
-                            } else {
-                                return <Redirect to={`/year/${match.params.year}/login`}/>;
-                            }
-                        }}/>
-                        <Route exact path='/year/:year/locations' render={({ match }) => {
-                            if (state.user) {
-                                return <AsyncLocations store={this.props.store}/>;
-                            } else {
-                                return <Redirect to={`/year/${match.params.year}/login`}/>;
-                            }
-                        }}/>
-                        <Route exact path='/year/:year/admin' render={({ match }) => {
-                            if (state.user && state.user.type === 'admin') {
-                                return <AsyncAdmin store={this.props.store}/>;
-                            } else {
-                                return <Redirect to={`/year/${match.params.year}/login`}/>;
-                            }
-                        }}/>
-                        <Route exact path='/year/:year/login'
-                            render={({ match }) => {
-                                if (state.user) {
-                                    return <Redirect to={`/year/${match.params.year}`}/>;
-                                } else {
-                                    return <AsyncLogin store={this.props.store} unsubs={this.state.unsubs}
-                                        realtime={this.registerRealtimeDataCallbacks}/>;
-                                }
-                            }}/>
-                    </div>
-                </div>
-            </Router>
-        );
-    }
+            <Routes>
+                {state.user ?
+                    <>
+                        <Route path='' element={<AsyncHome store={props.store}/>}/>
+                        <Route path='recentfeats' element={<AsyncRecentFeats store={props.store}/>}/>
+                        <Route path='feats' element={<AsyncFeats store={props.store}/>}/>
+                        <Route path='users' element={<AsyncUsers store={props.store}/>}/>
+                        <Route path='statistics' element={<AsyncStatistics store={props.store}/>}/>
+                        <Route path='locations' element={<AsyncLocations store={props.store}/>}/>
+                        {state.user.type === 'admin' &&
+                          <Route path='admin' element={<AsyncAdmin store={props.store}/>}/>
+                        }
+                    </> :
+                    <>
+                        <Route path='' element={<AsyncHome store={props.store}/>}/>
+                        <Route path="/*" element={ <Navigate to='login'/>}/>
+                    </>
+                }
+                <Route path='login'
+                    element={<AsyncLogin store={props.store} unsubs={unsubs}
+                        realtime={registerRealtimeDataCallbacks}/>}/>
+
+            </Routes>
+        </div>
+    );
 }
 
 export default Year;

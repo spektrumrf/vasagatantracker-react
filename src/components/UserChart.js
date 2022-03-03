@@ -4,7 +4,7 @@ import { format } from 'd3-format';
 import { Resizable, LineChart, YAxis, Charts, ChartRow, ChartContainer, Legend, styler } from 'react-timeseries-charts';
 import _ from 'lodash';
 import moment from 'moment';
-import CircularProgress from '../../node_modules/@material-ui/core/CircularProgress/CircularProgress';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 class CrossHairs extends React.Component {

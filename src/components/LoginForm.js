@@ -5,11 +5,11 @@ import userService from '../services/users';
 import locationService from '../services/locations';
 import propertiesService from '../services/properties';
 import firestore from '../firestore';
-import FormControl from '../../node_modules/@material-ui/core/FormControl/FormControl';
-import Button from '../../node_modules/@material-ui/core/Button/Button';
-import Typography from '../../node_modules/@material-ui/core/Typography/Typography';
-import TextField from '../../node_modules/@material-ui/core/TextField/TextField';
-import Paper from '../../node_modules/@material-ui/core/Paper/Paper';
+import FormControl from '@material-ui/core/FormControl/FormControl';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
 import Loading from './Loading';
 import _ from 'lodash';
 

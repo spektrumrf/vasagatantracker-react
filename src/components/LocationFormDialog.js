@@ -3,13 +3,13 @@ import locationService from '../services/locations';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
-import Button from '../../node_modules/@material-ui/core/Button/Button';
+import Button from '@material-ui/core/Button';
 import _ from 'lodash';
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import Loading from "./Loading";
-import DialogActions from "@material-ui/core/DialogActions";
-import Slide from "../../node_modules/@material-ui/core/Slide/Slide";
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import Loading from './Loading';
+import DialogActions from '@material-ui/core/DialogActions';
+import Slide from '@material-ui/core/Slide';
 
 class LocationFormDialog extends React.Component {
     constructor(props){

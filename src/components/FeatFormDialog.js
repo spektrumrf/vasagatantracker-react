@@ -12,12 +12,12 @@ import featService from '../services/feats';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
-import Fab from '../../node_modules/@material-ui/core/Fab/Fab';
-import Add from '@material-ui/icons/Add';
-import Slide from "../../node_modules/@material-ui/core/Slide/Slide";
-import Loading from "./Loading";
+import Fab from '@material-ui/core/Fab/Fab';
+//import Add from '@material-ui/icons/Add';
+import Slide from '@material-ui/core/Slide';
+import Loading from './Loading';
 import _ from 'lodash';
-import uuid from 'uuid/v4';
+import { v4 } from 'uuid';
 
 class FeatFormDialog extends React.Component{
     constructor(props) {
@@ -70,7 +70,7 @@ class FeatFormDialog extends React.Component{
                 }
             }
             const feat = {
-                id: uuid(),
+                id: v4(),
                 value: parseFloat(newFeatValue),
                 location: newFeatLocation.id,
                 user: state.user.id,
@@ -146,7 +146,7 @@ class FeatFormDialog extends React.Component{
                 <Fab color="primary" size="large" style={fabStyle} onClick={() => {
                     this.setState({ open: true });
                 }}>
-                    <Add/>
+                    {/* <Add/> */}
                 </Fab>
                 <Dialog fullScreen maxWidth="md" open={this.state.open} TransitionComponent={this.transition} transitionDuration={1000}>
                     <DialogContent style={{ display: 'flex', flexDirection: 'column', padding: '40px', alignItems: 'center' }}>

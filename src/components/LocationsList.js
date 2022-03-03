@@ -1,10 +1,10 @@
 import React from 'react';
 import Location from './Location';
 import _ from 'lodash';
-import {Grid, Table, TableHeaderRow} from "@devexpress/dx-react-grid-material-ui";
-import { IntegratedSorting, SortingState} from "@devexpress/dx-react-grid";
-import Typography from "../../node_modules/@material-ui/core/Typography/Typography";
-import Paper from "../../node_modules/@material-ui/core/Paper/Paper";
+import { Grid, Table, TableHeaderRow } from '@devexpress/dx-react-grid-material-ui';
+import { IntegratedSorting, SortingState } from '@devexpress/dx-react-grid';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
 
 class LocationsList extends React.Component{
     constructor(props) {

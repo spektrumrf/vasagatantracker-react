@@ -1,8 +1,8 @@
 import React from 'react';
-import Typography from '../../node_modules/@material-ui/core/Typography/Typography';
-import LinearProgress from '../../node_modules/@material-ui/core/LinearProgress/LinearProgress';
-import CardContent from '../../node_modules/@material-ui/core/CardContent/CardContent';
-import Card from '../../node_modules/@material-ui/core/Card/Card';
+import Typography from '@material-ui/core/Typography';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import CardContent from '@material-ui/core/CardContent';
+import Card from '@material-ui/core/Card';
 
 class Loading extends React.Component {
     constructor(props){

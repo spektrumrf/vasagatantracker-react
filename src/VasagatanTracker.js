@@ -1,10 +1,10 @@
 import React from 'react';
 import Year from './pages/Year';
-import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate  } from 'react-router-dom';
 import { createMuiTheme } from '@material-ui/core/styles';
-import MuiThemeProvider from '../node_modules/@material-ui/core/es/styles/MuiThemeProvider';
+import MuiThemeProvider from '@material-ui/core/es/styles/MuiThemeProvider';
 import blueGrey from '@material-ui/core/colors/blueGrey';
-import CssBaseline from '../node_modules/@material-ui/core/CssBaseline/CssBaseline';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 const theme = createMuiTheme({
     palette: {
@@ -33,13 +33,11 @@ class VasagatanTracker extends React.Component {
                 <CssBaseline />
                 <MuiThemeProvider theme={theme}>
                     <Router>
-                        <div>
-                            <Route exact path='/' render={() => <Redirect to={`/year/${year}`}/>}/>
-                            <Route path='/year/:year' render={({ match }) =>
-                                <Year store={this.props.store} year={match.params.year}/>
-                            }>
+                        <Routes>
+                            <Route path='/' element={<Navigate to={`/year/${year}`}/>}/>
+                            <Route path='/year/:year/*' element={<Year store={this.props.store}/>}>
                             </Route>
-                        </div>
+                        </Routes>
                     </Router>
                 </MuiThemeProvider>
             </div>

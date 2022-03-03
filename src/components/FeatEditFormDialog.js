@@ -10,10 +10,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import DialogActions from '@material-ui/core/DialogActions';
-import Button from '../../node_modules/@material-ui/core/Button/Button';
-import Grid from '../../node_modules/@material-ui/core/Grid/Grid';
+import Button from '@material-ui/core/IconButton';
+import Grid from '@material-ui/core/Grid';
 import _ from 'lodash';
-import Slide from '../../node_modules/@material-ui/core/Slide/Slide';
+import Slide from '@material-ui/core/Slide';
 import Loading from './Loading';
 
 class FeatEditFormDialog extends React.Component{

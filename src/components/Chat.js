@@ -1,11 +1,11 @@
 import React from 'react';
 import _ from 'lodash';
 import moment from 'moment';
-import uuid from 'uuid/v4';
+import { v4 } from 'uuid';
 import firestore from '../firestore';
-import Typography from '../../node_modules/@material-ui/core/Typography/Typography';
-import TextField from '../../node_modules/@material-ui/core/TextField/TextField';
-import Button from '../../node_modules/@material-ui/core/Button/Button';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
 class Chat extends React.Component {
     constructor(props) {
@@ -17,7 +17,7 @@ class Chat extends React.Component {
 
     sendMessage = async () => {
         try {
-            const id = uuid();
+            const id = v4();
             const comment = {
                 id,
                 message: this.state.message,

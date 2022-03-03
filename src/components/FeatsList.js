@@ -3,8 +3,8 @@ import firestore from '../firestore';
 import Feat from './Feat';
 import moment from 'moment';
 import _ from 'lodash';
-import Paper from '../../node_modules/@material-ui/core/Paper/Paper';
-import Typography from '../../node_modules/@material-ui/core/Typography/Typography';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import {
     Grid,
     VirtualTable,
@@ -17,16 +17,16 @@ import {
     IntegratedSorting,
     SortingState
 } from '@devexpress/dx-react-grid';
-import Input from '../../node_modules/@material-ui/core/Input/Input';
-import FormControl from '../../node_modules/@material-ui/core/FormControl/FormControl';
-import InputLabel from '../../node_modules/@material-ui/core/InputLabel/InputLabel';
-import Select from '../../node_modules/@material-ui/core/Select/Select';
-import MenuItem from '../../node_modules/@material-ui/core/MenuItem/MenuItem';
-import Checkbox from '../../node_modules/@material-ui/core/Checkbox/Checkbox';
-import ListItemText from '../../node_modules/@material-ui/core/ListItemText/ListItemText';
-import MuiGrid from '../../node_modules/@material-ui/core/Grid/Grid';
-import FilterList from '../../node_modules/@material-ui/icons/FilterList';
-import IconButton from '../../node_modules/@material-ui/core/IconButton/IconButton';
+import Input from '@material-ui/core/Input/';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Checkbox from '@material-ui/core/Checkbox';
+import ListItemText from '@material-ui/core/ListItemText';
+import MuiGrid from '@material-ui/core/Grid';
+//import FilterList from '@material-ui/icons/FilterList';
+import IconButton from '@material-ui/core/IconButton';
 
 const columns = [
     { name: 'name', title: 'Lag' },
@@ -149,7 +149,7 @@ class FeatsList extends React.Component {
                             <Typography variant="h6">{title}</Typography>
                             <IconButton style={{ marginTop: '10px', marginLeft: 'auto' }} onClick={() => this.setState({ filterVisible: !this.state.filterVisible })}>
                                 <Typography>{this.state.filterVisible ? 'Dölj filtren' : 'Visa filtren'}</Typography>
-                                <FilterList style={{ marginLeft: '5px' }}/>
+                                {/* <FilterList style={{ marginLeft: '5px' }}/> */}
                             </IconButton>
                         </div>
                         {this.state.filterVisible &&
