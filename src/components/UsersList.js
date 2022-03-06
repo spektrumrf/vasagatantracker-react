@@ -3,8 +3,8 @@ import User from './User';
 import _ from 'lodash';
 import { Grid, Table, TableHeaderRow } from '@devexpress/dx-react-grid-material-ui';
 import { IntegratedSorting, SortingState } from '@devexpress/dx-react-grid';
-import Typography from '../../node_modules/@material-ui/core/Typography/Typography';
-import Paper from '../../node_modules/@material-ui/core/Paper/Paper';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
 
 class UsersList extends React.Component{
     constructor(props) {

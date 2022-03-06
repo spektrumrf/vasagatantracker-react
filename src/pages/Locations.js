@@ -1,7 +1,7 @@
 import React from 'react';
 import LocationsList from '../components/LocationsList';
 import FeatFormDialog from '../components/FeatFormDialog';
-import _ from "lodash";
+import _ from 'lodash';
 
 const Locations = props => {
     const user = props.store.getState().user;

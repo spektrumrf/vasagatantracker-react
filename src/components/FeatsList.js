@@ -3,8 +3,8 @@ import firestore from '../firestore';
 import Feat from './Feat';
 import moment from 'moment';
 import _ from 'lodash';
-import Paper from '../../node_modules/@material-ui/core/Paper/Paper';
-import Typography from '../../node_modules/@material-ui/core/Typography/Typography';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 import {
     Grid,
     VirtualTable,
@@ -17,16 +17,16 @@ import {
     IntegratedSorting,
     SortingState
 } from '@devexpress/dx-react-grid';
-import Input from '../../node_modules/@material-ui/core/Input/Input';
-import FormControl from '../../node_modules/@material-ui/core/FormControl/FormControl';
-import InputLabel from '../../node_modules/@material-ui/core/InputLabel/InputLabel';
-import Select from '../../node_modules/@material-ui/core/Select/Select';
-import MenuItem from '../../node_modules/@material-ui/core/MenuItem/MenuItem';
-import Checkbox from '../../node_modules/@material-ui/core/Checkbox/Checkbox';
-import ListItemText from '../../node_modules/@material-ui/core/ListItemText/ListItemText';
-import MuiGrid from '../../node_modules/@material-ui/core/Grid/Grid';
-import FilterList from '../../node_modules/@material-ui/icons/FilterList';
-import IconButton from '../../node_modules/@material-ui/core/IconButton/IconButton';
+import Input from '@mui/material/Input/Input';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import Checkbox from '@mui/material/Checkbox';
+import ListItemText from '@mui/material/ListItemText';
+import MuiGrid from '@mui/material/Grid';
+import FilterList from '@mui/icons-material/FilterList';
+import IconButton from '@mui/material/IconButton';
 
 const columns = [
     { name: 'name', title: 'Lag' },

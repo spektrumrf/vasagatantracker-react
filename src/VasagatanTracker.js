@@ -1,10 +1,10 @@
 import React from 'react';
 import Year from './pages/Year';
 import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
-import { createMuiTheme } from '@material-ui/core/styles';
-import MuiThemeProvider from '../node_modules/@material-ui/core/es/styles/MuiThemeProvider';
-import blueGrey from '@material-ui/core/colors/blueGrey';
-import CssBaseline from '../node_modules/@material-ui/core/CssBaseline/CssBaseline';
+import { createMuiTheme } from '@mui/material/styles';
+import MuiThemeProvider from '../node_modules/@mui/material/es/styles/MuiThemeProvider';
+import blueGrey from '@mui/material/colors/blueGrey';
+import CssBaseline from '../node_modules/@mui/material/CssBaseline/CssBaseline';
 
 const theme = createMuiTheme({
     palette: {

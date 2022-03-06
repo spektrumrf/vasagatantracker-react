@@ -3,9 +3,9 @@ import _ from 'lodash';
 import moment from 'moment';
 import { v4 } from 'uuid';
 import firestore from '../firestore';
-import Typography from '../../node_modules/@material-ui/core/Typography/Typography';
-import TextField from '../../node_modules/@material-ui/core/TextField/TextField';
-import Button from '../../node_modules/@material-ui/core/Button/Button';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 class Chat extends React.Component {
     constructor(props) {

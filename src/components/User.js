@@ -1,16 +1,16 @@
 import React from 'react';
 import userService from '../services/users';
-import Dialog from '@material-ui/core/Dialog';
-import Divider from '@material-ui/core/Divider';
+import Dialog from '@mui/material/Dialog';
+import Divider from '@mui/material/Divider';
 import _ from 'lodash';
-import DialogActions from '../../node_modules/@material-ui/core/DialogActions/DialogActions';
-import DialogContent from '../../node_modules/@material-ui/core/DialogContent/DialogContent';
-import List from '../../node_modules/@material-ui/core/List/List';
-import ListItem from '../../node_modules/@material-ui/core/ListItem/ListItem';
-import ListItemText from '../../node_modules/@material-ui/core/ListItemText/ListItemText';
-import Button from '../../node_modules/@material-ui/core/Button/Button';
-import Slide from '../../node_modules/@material-ui/core/Slide/Slide';
-import Typography from '../../node_modules/@material-ui/core/Typography/Typography';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Button from '@mui/material/Button';
+import Slide from '@mui/material/Slide';
+import Typography from '@mui/material/Typography';
 import Loading from './Loading';
 
 class User extends React.Component {

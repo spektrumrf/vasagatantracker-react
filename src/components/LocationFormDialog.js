@@ -1,15 +1,15 @@
 import React from 'react';
 import locationService from '../services/locations';
-import Typography from '@material-ui/core/Typography';
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
-import Button from '../../node_modules/@material-ui/core/Button/Button';
+import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import _ from 'lodash';
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import Loading from "./Loading";
-import DialogActions from "@material-ui/core/DialogActions";
-import Slide from "../../node_modules/@material-ui/core/Slide/Slide";
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import Loading from './Loading';
+import DialogActions from '@mui/material/DialogActions';
+import Slide from '@mui/material/Slide';
 
 class LocationFormDialog extends React.Component {
     constructor(props){

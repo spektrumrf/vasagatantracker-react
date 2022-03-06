@@ -1,15 +1,15 @@
 import React from 'react';
 import userService from '../services/users';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import FormControl from '../../node_modules/@material-ui/core/FormControl/FormControl';
-import Button from '../../node_modules/@material-ui/core/Button/Button';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import Button from '@mui/material/Button';
 import _ from 'lodash';
 import Loading from './Loading';
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import Slide from "../../node_modules/@material-ui/core/Slide/Slide";
-import DialogActions from "@material-ui/core/DialogActions";
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import Slide from '@mui/material/Slide';
+import DialogActions from '@mui/material/DialogActions';
 
 class UserFormDialog extends React.Component {
     constructor(props){

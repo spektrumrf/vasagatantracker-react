@@ -4,11 +4,11 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import propertiesService from '../services/properties';
 import UserFormDialog from '../components/UserFormDialog';
 import LocationFormDialog from '../components/LocationFormDialog';
-import Typography from '../../node_modules/@material-ui/core/Typography/Typography';
-import Button from '../../node_modules/@material-ui/core/Button/Button';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import moment from 'moment';
-import Grid from '../../node_modules/@material-ui/core/Grid/Grid';
+import Grid from '@mui/material/Grid';
 import _ from 'lodash';
 import Loading from '../components/Loading';
 

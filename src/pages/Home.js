@@ -1,10 +1,10 @@
 import React from 'react';
 import FeatFormDialog from '../components/FeatFormDialog';
-import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
+import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
 import Countdown from 'react-countdown-now';
-import Paper from '../../node_modules/@material-ui/core/Paper/Paper';
-import CircularProgress from '../../node_modules/@material-ui/core/CircularProgress/CircularProgress';
+import Paper from '@mui/material/Paper';
+import CircularProgress from '@mui/material/CircularProgress';
 import _ from 'lodash';
 import moment from 'moment';
 
