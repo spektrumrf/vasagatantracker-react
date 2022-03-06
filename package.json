@@ -36,7 +36,7 @@
     "react-timeseries-charts": "^0.15.5",
     "recharts": "^1.4.3",
     "redux": "^3.7.2",
-    "uuid": "^3.3.2"
+    "uuid": "^8.3.2"
   },
   "scripts": {
     "start": "react-scripts start",

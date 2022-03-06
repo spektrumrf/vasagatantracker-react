@@ -14,10 +14,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
 import Fab from '../../node_modules/@material-ui/core/Fab/Fab';
 import Add from '@material-ui/icons/Add';
-import Slide from "../../node_modules/@material-ui/core/Slide/Slide";
-import Loading from "./Loading";
+import Slide from '../../node_modules/@material-ui/core/Slide/Slide';
+import Loading from './Loading';
 import _ from 'lodash';
-import uuid from 'uuid/v4';
+import { v4 } from 'uuid';
 
 class FeatFormDialog extends React.Component{
     constructor(props) {
@@ -70,7 +70,7 @@ class FeatFormDialog extends React.Component{
                 }
             }
             const feat = {
-                id: uuid(),
+                id: v4(),
                 value: parseFloat(newFeatValue),
                 location: newFeatLocation.id,
                 user: state.user.id,
