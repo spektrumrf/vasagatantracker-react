@@ -1,12 +1,11 @@
 import React from 'react';
 import Year from './pages/Year';
 import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
-import { createMuiTheme } from '@mui/material/styles';
-import MuiThemeProvider from '../node_modules/@mui/material/es/styles/MuiThemeProvider';
-import blueGrey from '@mui/material/colors/blueGrey';
-import CssBaseline from '../node_modules/@mui/material/CssBaseline/CssBaseline';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { blueGrey } from '@mui/material/colors';
+import CssBaseline from '@mui/material/CssBaseline';
 
-const theme = createMuiTheme({
+const theme = createTheme({
     palette: {
         primary: {
             main: '#ff6cac',
@@ -31,7 +30,7 @@ class VasagatanTracker extends React.Component {
         return (
             <div>
                 <CssBaseline />
-                <MuiThemeProvider theme={theme}>
+                <ThemeProvider theme={theme}>
                     <Router>
                         <div>
                             <Route exact path='/' render={() => <Redirect to={`/year/${year}`}/>}/>
@@ -41,7 +40,7 @@ class VasagatanTracker extends React.Component {
                             </Route>
                         </div>
                     </Router>
-                </MuiThemeProvider>
+                </ThemeProvider>
             </div>
         );
     }

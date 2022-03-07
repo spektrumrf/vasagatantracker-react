@@ -52,8 +52,13 @@
   },
   "proxy": "http://localhost:3001",
   "devDependencies": {
+    "@babel/core": "^7.17.5",
+    "@babel/eslint-parser": "^7.17.0",
+    "@babel/preset-react": "^7.16.7",
+    "babel-eslint": "^10.1.0",
     "enzyme": "^3.8.0",
-    "enzyme-adapter-react-16": "^1.9.1"
+    "enzyme-adapter-react-16": "^1.9.1",
+    "eslint": "^8.10.0"
   },
   "browserslist": [
     ">0.2%",

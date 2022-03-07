@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = process.env.NODE_ENV === 'production' ? 'https://vasagatantracker-spektrumrf.herokuapp.com/api/login' : '/api/login'
+const baseUrl = process.env.NODE_ENV === 'production' ? 'https://vasagatantracker-spektrumrf.herokuapp.com/api/login' : '/api/login';
 
 const login = async (credentials, year) => {
     const config = {
