@@ -24,7 +24,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
-import MuiGrid from '@mui/material/Grid';
+import { Grid as MuiGrid } from '@mui/material';
 import FilterList from '@mui/icons-material/FilterList';
 import IconButton from '@mui/material/IconButton';
 
@@ -134,27 +134,9 @@ class FeatsList extends React.Component {
         return (
             <div style={{ maxWidth: '560px', marginLeft: 'auto', marginRight: 'auto' }}>
                 <Paper>
-                    <Grid rows={featData} columns={columns}>
-                        <FilteringState filters={this.state.filters} />
-                        <IntegratedFiltering columnExtensions={[
-                            { columnName: 'status', predicate: filterPredicate },
-                            { columnName: 'name', predicate: filterPredicate },
-                            { columnName: 'location', predicate: filterPredicate },
-                        ]}/>
-                        <SortingState defaultSorting={[]}/>
-                        <IntegratedSorting />
-                        <VirtualTable rowComponent={this.TableRow} columnExtensions={columnExtensions} />
-                        <TableHeaderRow showSortingControls />
-                        <div style={{ display: 'flex', paddingTop: '10px', paddingLeft: '20px' }}>
-                            <Typography variant="h6">{title}</Typography>
-                            <IconButton style={{ marginTop: '10px', marginLeft: 'auto' }} onClick={() => this.setState({ filterVisible: !this.state.filterVisible })}>
-                                <Typography>{this.state.filterVisible ? 'Dölj filtren' : 'Visa filtren'}</Typography>
-                                <FilterList style={{ marginLeft: '5px' }}/>
-                            </IconButton>
-                        </div>
-                        {this.state.filterVisible &&
-                        <MuiGrid container spacing={16} style={{ paddingLeft: '30px', paddingRight: '20px' }}>
-                            <MuiGrid container spacing={16}>
+                    {this.state.filterVisible &&
+                        <MuiGrid overflow={false} spacing={12} style={{ paddingLeft: '30px', paddingRight: '20px', marginTop: '100px' }}>
+                            <MuiGrid container spacing={12}>
                                 <MuiGrid item xs={6}>
                                     <FormControl style={{ marginBottom: '10px' }} fullWidth>
                                         <InputLabel htmlFor="select-multiple-checkbox">Lag</InputLabel>
@@ -196,7 +178,7 @@ class FeatsList extends React.Component {
                                     </FormControl>
                                 </MuiGrid>
                             </MuiGrid>
-                            <MuiGrid container spacing={16}>
+                            <MuiGrid container spacing={12}>
                                 <MuiGrid item xs={6}>
                                     <FormControl style={{ marginBottom: '10px' }} fullWidth>
                                         <InputLabel htmlFor="select-multiple-checkbox">Platser</InputLabel>
@@ -218,6 +200,24 @@ class FeatsList extends React.Component {
                                 </MuiGrid>
                             </MuiGrid>
                         </MuiGrid>}
+                    <Grid rows={featData} columns={columns}>
+                        <FilteringState filters={this.state.filters} />
+                        <IntegratedFiltering columnExtensions={[
+                            { columnName: 'status', predicate: filterPredicate },
+                            { columnName: 'name', predicate: filterPredicate },
+                            { columnName: 'location', predicate: filterPredicate },
+                        ]}/>
+                        <SortingState defaultSorting={[]}/>
+                        <IntegratedSorting />
+                        <VirtualTable rowComponent={this.TableRow} columnExtensions={columnExtensions} />
+                        <TableHeaderRow showSortingControls />
+                        <div style={{ display: 'flex', paddingTop: '10px', paddingLeft: '20px' }}>
+                            <Typography variant="h6">{title}</Typography>
+                            <IconButton style={{ marginTop: '10px', marginLeft: 'auto' }} onClick={() => this.setState({ filterVisible: !this.state.filterVisible })}>
+                                <Typography>{this.state.filterVisible ? 'Dölj filtren' : 'Visa filtren'}</Typography>
+                                <FilterList style={{ marginLeft: '5px' }}/>
+                            </IconButton>
+                        </div>
                     </Grid>
                 </Paper>
                 <Feat store={this.props.store} clickedFeatId={this.state.clickedFeatId} proof={this.state.proofs} clearClickedFeat={this.clearClickedFeat}/>
