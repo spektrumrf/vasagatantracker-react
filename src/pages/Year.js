@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { HashRouter as Router, Link, Route, Redirect } from 'react-router-dom';
+import { Link, Route, Routes, Navigate, useParams } from 'react-router-dom';
 import firestore from '../firestore';
 import featService from '../services/feats';
 import userService from '../services/users';
@@ -39,16 +39,18 @@ function Year(props) {
     const [unsubs, setUnsubs] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [chatDrawerOpen, setChatDrawerOpen] = useState(false);
+    const { year }= useParams();
+
     useEffect(async () => {
         window.Chart = require('chart.js');
         await logout();
-        props.store.dispatch({ type: 'UPDATE_CHOSEN_YEAR', chosenYear: props.year });
+        props.store.dispatch({ type: 'UPDATE_CHOSEN_YEAR', chosenYear: year });
         await initData();
         return async function cleanup() {
             unsubs.forEach(unsub => unsub());
             await firestore.getAuth().signOut();
         };
-    }, [props.year]);
+    }, [year]);
 
     async function initData() {
         const state = props.store.getState();
@@ -112,7 +114,7 @@ function Year(props) {
         props.store.dispatch({
             type: 'LOGOUT'
         });
-        props.store.dispatch({ type: 'UPDATE_CHOSEN_YEAR', chosenYear: props.year });
+        props.store.dispatch({ type: 'UPDATE_CHOSEN_YEAR', chosenYear: year });
         await initData();
     }
 
@@ -263,42 +265,42 @@ function Year(props) {
     const menuList = (
         <div style={{ maxWidth: '200px' }}>
             <List component="nav">
-                <ListItem button component={Link} to={`/year/${props.year}`} data-next={true}>
+                <ListItem button component={Link} to={`/year/${year}`} data-next={true}>
                     <ListItemText primary="Hemsida"/>
                 </ListItem>
                 {state.user &&
-                    <ListItem button component={Link} to={`/year/${props.year}/recentfeats`} data-next={true}>
+                    <ListItem button component={Link} to={`/year/${year}/recentfeats`} data-next={true}>
                         <ListItemText primary="Senaste prestationer"/>
                     </ListItem>}
                 {state.user &&
-                    <ListItem button component={Link} to={`/year/${props.year}/feats`} data-next={true}>
+                    <ListItem button component={Link} to={`/year/${year}/feats`} data-next={true}>
                         <ListItemText primary={state.user.type === 'team' ? 'Egna prestationer' : 'Alla prestationer'}/>
                     </ListItem>}
                 {state.user &&
-                    <ListItem button component={Link} to={`/year/${props.year}/users`} data-next={true}>
+                    <ListItem button component={Link} to={`/year/${year}/users`} data-next={true}>
                         <ListItemText primary="Lag"/>
                     </ListItem>}
                 {state.user &&
-                    <ListItem button component={Link} to={`/year/${props.year}/locations`} data-next={true}>
+                    <ListItem button component={Link} to={`/year/${year}/locations`} data-next={true}>
                         <ListItemText primary="Platser"/>
                     </ListItem>}
                 {state.user &&
-                    <ListItem button component={Link} to={`/year/${props.year}/statistics`} data-next={true}>
+                    <ListItem button component={Link} to={`/year/${year}/statistics`} data-next={true}>
                         <ListItemText primary="Statistik"/>
                     </ListItem>}
                 {state.user && state.user.type === 'admin' &&
-                    <ListItem button component={Link} to={`/year/${props.year}/admin`} data-next={true}>
+                    <ListItem button component={Link} to={`/year/${year}/admin`} data-next={true}>
                         <ListItemText primary="Admin"/>
                     </ListItem>}
             </List>
             <Divider/>
             <List>
                 {state.user ?
-                    <ListItem button component={Link} to={`/year/${props.year}`} data-next={true}
-                        onClick={this.logout}>
+                    <ListItem button component={Link} to={`/year/${year}`} data-next={true}
+                        onClick={logout}>
                         <ListItemText primary={`Logga ut som ${state.user.name}`}/>
                     </ListItem> :
-                    <ListItem button component={Link} to={`/year/${props.year}/login`} data-next={true}>
+                    <ListItem button component={Link} to={`/year/${year}/login`} data-next={true}>
                         <ListItemText primary="Logga in"/>
                     </ListItem>}
             </List>
@@ -330,44 +332,43 @@ function Year(props) {
         },
     };
     return (
-        <Router>
-            <div style={{ marginLeft: '20px', marginRight: '20px', marginBottom: '100px' }}>
-                <div style={styles.root}>
-                    <AppBar position="fixed">
-                        <Toolbar style={{ display: 'flex', alignItems: 'center' }} variant="dense">
-                            <div>
-                                <IconButton style={styles.menuButton} color="inherit" aria-label="Menu"
-                                    onClick={() => setDrawerOpen(true)}>
-                                    <Menu/>
-                                </IconButton>
-                            </div>
-                            <div>
-                                <Typography variant="h6" color="inherit" style={styles.grow}>
-                                        VasagatanTracker {props.year}
-                                </Typography>
-                            </div>
-                            {state.user &&
+        <div style={{ marginLeft: '20px', marginRight: '20px', marginBottom: '100px' }}>
+            <div style={styles.root}>
+                <AppBar position="fixed">
+                    <Toolbar style={{ display: 'flex', alignItems: 'center' }} variant="dense">
+                        <div>
+                            <IconButton style={styles.menuButton} color="inherit" aria-label="Menu"
+                                onClick={() => setDrawerOpen(true)}>
+                                <Menu/>
+                            </IconButton>
+                        </div>
+                        <div>
+                            <Typography variant="h6" color="inherit" style={styles.grow}>
+                                        VasagatanTracker {year}
+                            </Typography>
+                        </div>
+                        {state.user &&
                                 <div style={{ marginLeft: 'auto' }}>
                                     <IconButton style={styles.chatButton} color="inherit" aria-label="Chat"
                                         onClick={() => setChatDrawerOpen(true)}>
                                         <ChatIcon/>
                                     </IconButton>
                                 </div>}
-                        </Toolbar>
-                    </AppBar>
+                    </Toolbar>
+                </AppBar>
+            </div>
+            <SwipeableDrawer open={drawerOpen} onOpen={() => setDrawerOpen(true)}
+                onClose={() => setDrawerOpen(false)}>
+                <div
+                    tabIndex={0}
+                    role="button"
+                    onClick={() => setDrawerOpen(false)}
+                    onKeyDown={() => setDrawerOpen(false)}
+                >
+                    {menuList}
                 </div>
-                <SwipeableDrawer open={drawerOpen} onOpen={() => setDrawerOpen(true)}
-                    onClose={() => setDrawerOpen(false)}>
-                    <div
-                        tabIndex={0}
-                        role="button"
-                        onClick={() => setDrawerOpen(false)}
-                        onKeyDown={() => setDrawerOpen(false)}
-                    >
-                        {/* {menuList} */}
-                    </div>
-                </SwipeableDrawer>
-                {state.user &&
+            </SwipeableDrawer>
+            {state.user &&
                     <SwipeableDrawer anchor="right" open={chatDrawerOpen} onOpen={() => setChatDrawerOpen(true)}
                         onClose={() => setChatDrawerOpen(false)}>
                         <div
@@ -377,64 +378,30 @@ function Year(props) {
                             <Chat store={props.store}/>
                         </div>
                     </SwipeableDrawer>}
-                <div>
-                    <Route exact path='/year/:year' render={() =>
-                        <AsyncHome store={props.store}/>
-                    }/>
-                    <Route exact path='/year/:year/recentfeats' render={({ match }) => {
-                        if (state.user) {
-                            return <AsyncRecentFeats store={props.store}/>;
-                        } else {
-                            return <Redirect to={`/year/${match.params.year}/login`}/>;
+            <Routes>
+                {state.user ?
+                    <>
+                        <Route path='' element={<AsyncHome store={props.store}/>}/>
+                        <Route path='recentfeats' element={<AsyncRecentFeats store={props.store}/>}/>
+                        <Route path='feats' element={<AsyncFeats store={props.store}/>}/>
+                        <Route path='users' element={<AsyncUsers store={props.store}/>}/>
+                        <Route path='statistics' element={<AsyncStatistics store={props.store}/>}/>
+                        <Route path='locations' element={<AsyncLocations store={props.store}/>}/>
+                        {state.user.type === 'admin' &&
+                              <Route path='admin' element={<AsyncAdmin store={props.store}/>}/>
                         }
-                    }}/>
-                    <Route exact path='/year/:year/feats' render={({ match }) => {
-                        if (state.user) {
-                            return <AsyncFeats store={props.store}/>;
-                        } else {
-                            return <Redirect to={`/year/${match.params.year}/login`}/>;
-                        }
-                    }}/>
-                    <Route exact path='/year/:year/users' render={({ match }) => {
-                        if (state.user) {
-                            return <AsyncUsers store={props.store}/>;
-                        } else {
-                            return <Redirect to={`/year/${match.params.year}/login`}/>;
-                        }
-                    }}/>
-                    <Route exact path='/year/:year/statistics' render={({ match }) => {
-                        if (state.user) {
-                            return <AsyncStatistics store={props.store}/>;
-                        } else {
-                            return <Redirect to={`/year/${match.params.year}/login`}/>;
-                        }
-                    }}/>
-                    <Route exact path='/year/:year/locations' render={({ match }) => {
-                        if (state.user) {
-                            return <AsyncLocations store={props.store}/>;
-                        } else {
-                            return <Redirect to={`/year/${match.params.year}/login`}/>;
-                        }
-                    }}/>
-                    <Route exact path='/year/:year/admin' render={({ match }) => {
-                        if (state.user && state.user.type === 'admin') {
-                            return <AsyncAdmin store={props.store}/>;
-                        } else {
-                            return <Redirect to={`/year/${match.params.year}/login`}/>;
-                        }
-                    }}/>
-                    <Route exact path='/year/:year/login'
-                        render={({ match }) => {
-                            if (state.user) {
-                                return <Redirect to={`/year/${match.params.year}`}/>;
-                            } else {
-                                return <AsyncLogin store={props.store} unsubs={this.state.unsubs}
-                                    realtime={this.registerRealtimeDataCallbacks}/>;
-                            }
-                        }}/>
-                </div>
-            </div>
-        </Router>
+                    </> :
+                    <>
+                        <Route path='' element={<AsyncHome store={props.store}/>}/>
+                        <Route path="/*" element={ <Navigate to='login'/>}/>
+                    </>
+                }
+                <Route path='login'
+                    element={<AsyncLogin store={props.store} unsubs={unsubs}
+                        realtime={registerRealtimeDataCallbacks}/>}/>
+
+            </Routes>
+        </div>
     );
 }
 

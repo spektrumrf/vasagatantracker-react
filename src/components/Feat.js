@@ -93,6 +93,11 @@ class Feat extends React.Component {
         return <Slide direction="up" {...props} />;
     };
 
+    Transition = React.forwardRef(function Transition(props, ref) {
+        return <Slide direction="up" ref={ref} {...props} />;
+    });
+
+
     render() {
         const state = this.props.store.getState();
         const user = state.user;

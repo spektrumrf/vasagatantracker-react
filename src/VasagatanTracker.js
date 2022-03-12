@@ -1,6 +1,6 @@
 import React from 'react';
 import Year from './pages/Year';
-import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { blueGrey } from '@mui/material/colors';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -32,13 +32,10 @@ class VasagatanTracker extends React.Component {
                 <CssBaseline />
                 <ThemeProvider theme={theme}>
                     <Router>
-                        <div>
-                            <Route exact path='/' render={() => <Redirect to={`/year/${year}`}/>}/>
-                            <Route path='/year/:year' render={({ match }) =>
-                                <Year store={this.props.store} year={match.params.year}/>
-                            }>
-                            </Route>
-                        </div>
+                        <Routes>
+                            <Route path='/' element={<Navigate to={`/year/${year}`}/>}/>
+                            <Route path='/year/:year/*' element={<Year store={this.props.store}/>}/>
+                        </Routes>
                     </Router>
                 </ThemeProvider>
             </div>
