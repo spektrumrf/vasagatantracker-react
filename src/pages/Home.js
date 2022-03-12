@@ -1,10 +1,10 @@
 import React from 'react';
 import FeatFormDialog from '../components/FeatFormDialog';
-import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
+import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
 import Countdown from 'react-countdown-now';
-import Paper from '../../node_modules/@material-ui/core/Paper/Paper';
-import CircularProgress from '../../node_modules/@material-ui/core/CircularProgress/CircularProgress';
+import Paper from '@mui/material/Paper';
+import CircularProgress from '@mui/material/CircularProgress';
 import _ from 'lodash';
 import moment from 'moment';
 
@@ -13,13 +13,13 @@ const Home = props => {
     const user = state.user;
     const startDate = state.startDate;
     const info = state.info;
-    const countdownRenderer = ({ hours, minutes, seconds, completed }) => {
+    const countdownRenderer = ({ days, hours, minutes, seconds, completed }) => {
         if (completed) {
             return <Typography variant="h4">
                 {state.activeYear === state.chosenYear ? 'Approbatur i Vasagatan har börjat, lycka till!' : 'Approbatur i Vasagatan är avslutad, buhuu!'}
             </Typography>;
         } else {
-            return <Typography variant="h4">{hours} timmar {minutes} minuter {seconds} sekunder</Typography>;
+            return <Typography variant="h4">{days > 0 && `${days} dagar`} {hours} timmar {minutes} minuter {seconds} sekunder</Typography>;
         }
     };
     return (

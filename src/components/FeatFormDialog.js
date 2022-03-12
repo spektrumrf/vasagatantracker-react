@@ -1,23 +1,23 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import InputLabel from '@material-ui/core/InputLabel';
-import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Typography from '@material-ui/core/Typography';
+import Button from '@mui/material/Button';
+import InputLabel from '@mui/material/InputLabel';
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormHelperText from '@mui/material/FormHelperText';
+import Typography from '@mui/material/Typography';
 import ImageCompressor from 'image-compressor.js';
 import featService from '../services/feats';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';
-import Fab from '../../node_modules/@material-ui/core/Fab/Fab';
-import Add from '@material-ui/icons/Add';
-import Slide from "../../node_modules/@material-ui/core/Slide/Slide";
-import Loading from "./Loading";
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Dialog from '@mui/material/Dialog';
+import Fab from '@mui/material/Fab';
+import Add from '@mui/icons-material/Add';
+import Slide from '@mui/material/Slide';
+import Loading from './Loading';
 import _ from 'lodash';
-import uuid from 'uuid/v4';
+import { v4 } from 'uuid';
 
 class FeatFormDialog extends React.Component{
     constructor(props) {
@@ -70,7 +70,7 @@ class FeatFormDialog extends React.Component{
                 }
             }
             const feat = {
-                id: uuid(),
+                id: v4(),
                 value: parseFloat(newFeatValue),
                 location: newFeatLocation.id,
                 user: state.user.id,

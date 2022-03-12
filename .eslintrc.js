@@ -4,7 +4,13 @@ module.exports = {
         "node": true,
         "browser": true
     },
-    "parser": "babel-eslint",
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+      "requireConfigFile": false,
+      "babelOptions": {
+        "presets": ["@babel/preset-react"]
+      }
+    },
     "extends": "eslint:recommended",
     "rules": {
         "indent": [

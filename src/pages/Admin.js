@@ -1,14 +1,15 @@
 import React from 'react';
-import { MuiPickersUtilsProvider } from 'material-ui-pickers';
+import AdapterMoment from '@mui/lab/AdapterMoment';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import propertiesService from '../services/properties';
 import UserFormDialog from '../components/UserFormDialog';
 import LocationFormDialog from '../components/LocationFormDialog';
-import Typography from '../../node_modules/@material-ui/core/Typography/Typography';
-import Button from '../../node_modules/@material-ui/core/Button/Button';
-import { DateTimePicker } from 'material-ui-pickers';
-import MomentUtils from '@date-io/moment';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import DateTimePicker from '@mui/lab/DateTimePicker';
+import TextField from '@mui/material/TextField';
 import moment from 'moment';
-import Grid from '../../node_modules/@material-ui/core/Grid/Grid';
+import Grid from '@mui/material/Grid';
 import _ from 'lodash';
 import Loading from '../components/Loading';
 
@@ -93,7 +94,7 @@ class Admin extends React.Component {
 
     render() {
         return (
-            <MuiPickersUtilsProvider utils={MomentUtils} locale={'fi'}>
+            <LocalizationProvider dateAdapter={AdapterMoment}>
                 <div>
                     <div style={{ paddingTop: '0px' }}>
                         <Typography variant="h5">Admin</Typography>
@@ -114,7 +115,7 @@ class Admin extends React.Component {
                             </div>
                             <form>
                                 <DateTimePicker
-                                    ampm={false}
+                                    renderInput={(props) => <TextField {...props} />}
                                     value={moment.unix(this.state.newStartDate)}
                                     onChange={(date) => {
                                         this.setState({ newStartDate: date.unix() });
@@ -132,7 +133,7 @@ class Admin extends React.Component {
                             </div>
                             <form>
                                 <DateTimePicker
-                                    ampm={false}
+                                    renderInput={(props) => <TextField {...props} />}
                                     value={moment.unix(this.state.newEndDate)}
                                     onChange={(date) => this.setState({ newEndDate: date.unix() })}
                                     label="Ny sluttid"
@@ -148,7 +149,7 @@ class Admin extends React.Component {
                             </div>
                             <form>
                                 <DateTimePicker
-                                    ampm={false}
+                                    renderInput={(props) => <TextField {...props} />}
                                     value={moment.unix(this.state.newRealtimeCutoffTime)}
                                     onChange={(date) => this.setState({ newRealtimeCutoffTime: date.unix() })}
                                     label="Ny realtime cutoff"
@@ -158,7 +159,7 @@ class Admin extends React.Component {
                         </Grid>
                     </Grid>
                 </div>
-            </MuiPickersUtilsProvider>
+            </LocalizationProvider>
         );
     }
 }

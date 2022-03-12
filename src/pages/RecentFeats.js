@@ -1,7 +1,7 @@
 import React from 'react';
 import FeatsList from '../components/FeatsList';
 import FeatFormDialog from '../components/FeatFormDialog';
-import _ from "lodash";
+import _ from 'lodash';
 
 const RecentFeats = props => {
     const user = props.store.getState().user;
