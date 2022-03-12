@@ -7,6 +7,7 @@ import LocationFormDialog from '../components/LocationFormDialog';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import DateTimePicker from '@mui/lab/DateTimePicker';
+import TextField from '@mui/material/TextField';
 import moment from 'moment';
 import Grid from '@mui/material/Grid';
 import _ from 'lodash';
@@ -114,7 +115,7 @@ class Admin extends React.Component {
                             </div>
                             <form>
                                 <DateTimePicker
-                                    ampm={false}
+                                    renderInput={(props) => <TextField {...props} />}
                                     value={moment.unix(this.state.newStartDate)}
                                     onChange={(date) => {
                                         this.setState({ newStartDate: date.unix() });
@@ -132,7 +133,7 @@ class Admin extends React.Component {
                             </div>
                             <form>
                                 <DateTimePicker
-                                    ampm={false}
+                                    renderInput={(props) => <TextField {...props} />}
                                     value={moment.unix(this.state.newEndDate)}
                                     onChange={(date) => this.setState({ newEndDate: date.unix() })}
                                     label="Ny sluttid"
@@ -148,7 +149,7 @@ class Admin extends React.Component {
                             </div>
                             <form>
                                 <DateTimePicker
-                                    ampm={false}
+                                    renderInput={(props) => <TextField {...props} />}
                                     value={moment.unix(this.state.newRealtimeCutoffTime)}
                                     onChange={(date) => this.setState({ newRealtimeCutoffTime: date.unix() })}
                                     label="Ny realtime cutoff"

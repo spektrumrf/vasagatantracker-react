@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, Route, Routes, Navigate, useParams } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, Route, Routes, useParams } from 'react-router-dom';
 import firestore from '../firestore';
 import featService from '../services/feats';
 import userService from '../services/users';
@@ -36,6 +36,7 @@ const AsyncLogin = Loadable({ loader: () => import('./Login'), loading: Loading 
 
 function Year(props) {
 
+    const didMountRef = useRef(false);
     const [unsubs, setUnsubs] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [chatDrawerOpen, setChatDrawerOpen] = useState(false);
@@ -43,9 +44,12 @@ function Year(props) {
 
     useEffect(async () => {
         window.Chart = require('chart.js');
-        await logout();
+        if(didMountRef.current) {
+            await logout();
+        }
         props.store.dispatch({ type: 'UPDATE_CHOSEN_YEAR', chosenYear: year });
         await initData();
+        didMountRef.current = true;
         return async function cleanup() {
             unsubs.forEach(unsub => unsub());
             await firestore.getAuth().signOut();
@@ -110,6 +114,7 @@ function Year(props) {
 
     async function logout() {
         await firestore.getAuth().signOut();
+        console.log('removing');
         window.localStorage.removeItem('loggedFeatappUser');
         props.store.dispatch({
             type: 'LOGOUT'
@@ -297,7 +302,7 @@ function Year(props) {
             <List>
                 {state.user ?
                     <ListItem button component={Link} to={`/year/${year}`} data-next={true}
-                        onClick={logout}>
+                        onClick={() => logout()}>
                         <ListItemText primary={`Logga ut som ${state.user.name}`}/>
                     </ListItem> :
                     <ListItem button component={Link} to={`/year/${year}/login`} data-next={true}>
@@ -314,7 +319,6 @@ function Year(props) {
             </List>
         </div>
     );
-    console.log(menuList);
     const styles = {
         root: {
             textAlign: 'center',
@@ -393,7 +397,6 @@ function Year(props) {
                     </> :
                     <>
                         <Route path='' element={<AsyncHome store={props.store}/>}/>
-                        <Route path="/*" element={ <Navigate to='login'/>}/>
                     </>
                 }
                 <Route path='login'

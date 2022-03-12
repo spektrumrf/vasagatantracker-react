@@ -13,13 +13,13 @@ const Home = props => {
     const user = state.user;
     const startDate = state.startDate;
     const info = state.info;
-    const countdownRenderer = ({ hours, minutes, seconds, completed }) => {
+    const countdownRenderer = ({ days, hours, minutes, seconds, completed }) => {
         if (completed) {
             return <Typography variant="h4">
                 {state.activeYear === state.chosenYear ? 'Approbatur i Vasagatan har börjat, lycka till!' : 'Approbatur i Vasagatan är avslutad, buhuu!'}
             </Typography>;
         } else {
-            return <Typography variant="h4">{hours} timmar {minutes} minuter {seconds} sekunder</Typography>;
+            return <Typography variant="h4">{days > 0 && `${days} dagar`} {hours} timmar {minutes} minuter {seconds} sekunder</Typography>;
         }
     };
     return (
