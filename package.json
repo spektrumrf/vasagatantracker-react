@@ -27,7 +27,6 @@
     "react-countdown-now": "^2.1.0",
     "react-countdown-to-future-date": "0.0.3",
     "react-dom": "^17.0.2",
-    "react-file-base64": "^1.0.3",
     "react-image-file": "^0.3.0",
     "react-loadable": "^5.5.0",
     "react-redux": "^7.2.6",
@@ -44,7 +43,6 @@
     "start-node17": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "build-node17": "react-scripts --openssl-legacy-provider build",
-    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "server": "json-server -p3001 db.json"
   },
@@ -54,8 +52,6 @@
     "@babel/eslint-parser": "^7.17.0",
     "@babel/preset-react": "^7.16.7",
     "babel-eslint": "^10.1.0",
-    "enzyme": "^3.8.0",
-    "enzyme-adapter-react-16": "^1.9.1",
     "eslint": "^8.10.0"
   },
   "browserslist": [
