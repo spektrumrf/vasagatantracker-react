@@ -35,7 +35,7 @@ class Statistics extends React.Component {
                     </Tabs>
                 </Paper>
                 {this.state.tab === 0 && <UserChart store={this.props.store}/>}
-                {this.state.tab === 0 && <DrinkChart store={this.props.store}/>}
+                {this.state.tab === 1 && <DrinkChart store={this.props.store}/>}
                 {this.state.tab === 2 && <ProjectionChart store={this.props.store}/>}
             </div>
         );
