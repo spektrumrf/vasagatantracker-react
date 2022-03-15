@@ -89,10 +89,6 @@ class Feat extends React.Component {
         this.props.clearClickedFeat()();
     };
 
-    transition = (props) => {
-        return <Slide direction="up" {...props} />;
-    };
-
     Transition = React.forwardRef(function Transition(props, ref) {
         return <Slide direction="up" ref={ref} {...props} />;
     });
@@ -111,7 +107,7 @@ class Feat extends React.Component {
         return (
             <div>
                 <Dialog fullScreen maxWidth="md" open={this.state.open} onClose={this.props.clearClickedFeat()}
-                    TransitionComponent={this.transition} transitionDuration={1000}>
+                    TransitionComponent={this.Transition} transitionDuration={1000}>
                     <DialogContent>
                         {feat &&
                         <div style={{ maxWidth: '500px', margin: '0 auto' }}>
